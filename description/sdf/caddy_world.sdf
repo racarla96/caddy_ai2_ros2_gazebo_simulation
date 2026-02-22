@@ -229,7 +229,7 @@
                 </collision>
               
                 <!--Sensor LiDAR definition-->
-                <sensor name='gpu_lidar' type='gpu_lidar'>"
+                <sensor name='gpu_lidar' type='gpu_lidar'>
                     <pose relative_to='base_scan'>0 0 0 0 0 0</pose>
                     <frame_name>base_scan</frame_name>
                     <topic>scan</topic>
