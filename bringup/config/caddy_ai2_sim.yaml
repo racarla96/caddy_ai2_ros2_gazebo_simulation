@@ -1,0 +1,45 @@
+controller_manager:
+  ros__parameters:
+    update_rate: 100  # Hz
+
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+
+bicycle_steering_controller:
+  ros__parameters:
+    type: 'bicycle_steering_controller/BicycleSteeringController'
+    update_rate: 50 # Hz
+    wheelbase: 1.65
+    traction_wheel_radius: 0.235
+    reference_timeout: 2.0 # In s. Timeout to stop if no cmd_vel is received
+    traction_joints_names: ['bicycle_to_ackermann_traction_adapter/center_traction_joint']
+    steering_joints_names: ['bicycle_to_ackermann_steering_adapter/center_steering_joint']
+    open_loop: false
+    velocity_rolling_window_size: 10
+    base_frame_id: base_link
+    odom_frame_id: odom
+    enable_odom_tf: true
+    twist_covariance_diagonal: [0.0, 7.0, 14.0, 21.0, 28.0, 35.0]
+    pose_covariance_diagonal: [0.0, 7.0, 14.0, 21.0, 28.0, 35.0]
+    position_feedback: false
+
+bicycle_to_ackermann_steering_adapter:
+  ros__parameters:
+    type: 'bicycle_to_ackermann_steering_adapter/BicycleToAckermannSteeringAdapter'
+    update_rate: 50 # Hz - Given by real hardware component
+    wheelbase: 1.65
+    track_width: 1.0
+    max_steer_angle: 0.4
+    input_steering_name: 'center_steering_joint'
+    output_steering_names: ['right_wheel_steering_joint', 'left_wheel_steering_joint']
+
+bicycle_to_ackermann_traction_adapter:
+  ros__parameters:
+    type: 'bicycle_to_ackermann_traction_adapter/BicycleToAckermannTractionAdapter'
+    update_rate: 25 # Hz - Given by real hardware component
+    wheelbase: 1.65
+    track_width: 1.0
+    wheel_radius: 0.235
+    input_steering_name: 'bicycle_to_ackermann_steering_adapter/center_steering_joint'
+    input_traction_name: 'center_traction_joint'
+    output_traction_names: ['rear_right_wheel_joint', 'rear_left_wheel_joint']
