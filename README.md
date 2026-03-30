@@ -18,6 +18,9 @@ A la hora de hacer la simulación, se tiene un archivo aproximado del chassis de
 
 ![Visualización del vehículo](doc/img/chassis_stl_align_4.png)
 
+Como podemos ver, el wheelbase del vehículo está a escala en mm, es decir, 16.50 mm, del modelo visual, equivale 1:100 con el real, es decir, 1650 mm o 1.65 metros.
+
 # TODOs
 
-- [ ] Medir los aspectos reales del vehículo, cómo el centro de gravedad, masa del vehículo, etc. Añadir documento de como se mide esto y hacer fotos.
+- [ ] Medir los aspectos reales del vehículo, cómo el centro de gravedad, masa del vehículo, etc (EN PROGRESO). Añadir documento de como se mide esto y hacer fotos.
+- [ ] Tengo dudas sobre la asimetría en la distribución de pesos del vehículo. ¿Mover atrás el bloque de la inercia es realista? ¿Cómo se puede medir esto?

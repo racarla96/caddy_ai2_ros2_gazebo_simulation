@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.8)
-project(caddy_ai2_ros2_simulation)
+project(caddy_ai2_ros2_gazebo_simulation)
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
@@ -21,28 +21,8 @@ ament_target_dependencies(odom2tf_broadcaster rclcpp tf2_ros tf2_msgs)
 install(TARGETS odom2tf_broadcaster DESTINATION lib/${PROJECT_NAME})
 
 install(
-  DIRECTORY bringup/launch/
-  DESTINATION share/${PROJECT_NAME}/bringup/launch
-)
-
-install(
-  DIRECTORY bringup/config/
-  DESTINATION share/${PROJECT_NAME}/bringup/config
-)
-
-install(
-  DIRECTORY description/urdf/
-  DESTINATION share/${PROJECT_NAME}/description/urdf
-)
-
-install(
-  DIRECTORY tools/rviz/
-  DESTINATION share/${PROJECT_NAME}/tools/rviz
-)
-
-install(
-  DIRECTORY meshes/stl/
-  DESTINATION share/${PROJECT_NAME}/meshes/stl
+  DIRECTORY bringup code description 
+  DESTINATION share/${PROJECT_NAME}
 )
 
 ament_package()
