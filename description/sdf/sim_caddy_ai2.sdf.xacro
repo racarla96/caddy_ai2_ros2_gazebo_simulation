@@ -1,0 +1,488 @@
+<?xml version="1.0" ?>
+<sdf version="1.11" xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <!-- SDF Specification 1.11 -->
+  <!-- https://sdformat.org/spec/1.11/sdf/ -->
+
+  <!-- Include materials -->
+  <xacro:include filename="$(find caddy_ai2_ros2_gazebo_simulation)/description/sdf/materials.sdf.xacro"/>
+
+  <!-- Define parameters with default values -->
+  <xacro:arg name="prefix" default="" />
+  <xacro:property name="prefix" value="$(arg prefix)" />
+
+  <world name='base_world'>
+    <physics name="1ms" type="ignored">
+      <max_step_size>0.001</max_step_size>
+      <real_time_factor>1.0</real_time_factor>
+    </physics>
+    <plugin
+      filename="gz-sim-physics-system"
+      name="gz::sim::systems::Physics">
+    </plugin>
+    <plugin
+      filename="gz-sim-user-commands-system"
+      name="gz::sim::systems::UserCommands">
+    </plugin>
+    <plugin
+      filename="gz-sim-scene-broadcaster-system"
+      name="gz::sim::systems::SceneBroadcaster">
+    </plugin>
+    <plugin filename="gz-sim-imu-system"
+      name="gz::sim::systems::Imu">
+    </plugin>
+    <plugin
+      filename="gz-sim-sensors-system"
+      name="gz::sim::systems::Sensors">
+      <render_engine>ogre2</render_engine>
+    </plugin>
+    <light name='sun' type='directional'>
+      <cast_shadows>1</cast_shadows>
+      <pose>0 0 10 0 -0 0</pose>
+      <diffuse>0.8 0.8 0.8 1</diffuse>
+      <specular>0.2 0.2 0.2 1</specular>
+      <attenuation>
+        <range>1000</range>
+        <constant>0.9</constant>
+        <linear>0.01</linear>
+        <quadratic>0.001</quadratic>
+      </attenuation>
+      <direction>-0.5 0.1 -0.9</direction>
+      <spot>
+        <inner_angle>0</inner_angle>
+        <outer_angle>0</outer_angle>
+        <falloff>0</falloff>
+      </spot>
+    </light>
+    <model name='ground_plane'>
+      <static>1</static>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>100 100</size>
+            </plane>
+          </geometry>
+          <surface>
+            <friction>
+              <ode>
+                <mu>100</mu>
+                <mu2>50</mu2>
+              </ode>
+              <torsional>
+                <ode/>
+              </torsional>
+            </friction>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+          </surface>
+          <max_contacts>10</max_contacts>
+        </collision>
+        <visual name='visual'>
+          <cast_shadows>0</cast_shadows>
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>100 100</size>
+            </plane>
+          </geometry>
+          <material>
+            <script>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+              <name>Gazebo/Grey</name>
+            </script>
+          </material>
+        </visual>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+    </model>
+    <gravity>0 0 -9.8</gravity>
+    <magnetic_field>6e-06 2.3e-05 -4.2e-05</magnetic_field>
+    <atmosphere type='adiabatic'/>
+    <physics type='ode'>
+      <max_step_size>0.001</max_step_size>
+      <real_time_factor>1</real_time_factor>
+      <real_time_update_rate>1000</real_time_update_rate>
+    </physics>
+    <scene>
+      <ambient>0.4 0.4 0.4 1</ambient>
+      <background>0.7 0.7 0.7 1</background>
+      <shadows>1</shadows>
+    </scene>
+    <wind/>
+    <spherical_coordinates>
+      <surface_model>EARTH_WGS84</surface_model>
+      <latitude_deg>0</latitude_deg>
+      <longitude_deg>0</longitude_deg>
+      <elevation>0</elevation>
+      <heading_deg>0</heading_deg>
+    </spherical_coordinates>
+    <gui fullscreen='0'>
+      <camera name='user_camera'>
+        <pose>3.17226 -5.10401 6.58845 0 0.739643 2.19219</pose>
+        <view_controller>orbit</view_controller>
+        <projection_type>perspective</projection_type>
+      </camera>
+    </gui>
+    <model name='caddy_ai2' canonical_link='${prefix}base_link'>
+
+      <!-- Define robot constants -->
+      <!-- Define tire properties - Deli Tire 18x8.5-8 (inches) -->
+      <xacro:property name="wheel_radius" value="0.235"/>
+      <xacro:property name="wheel_width" value="0.22"/>
+      <xacro:property name="wheel_mass" value="8.7"/>
+
+      <!-- Define robot constants -->
+      <xacro:property name="track_width" value="1"/>
+      <xacro:property name="wheelbase" value="1.65"/>
+      <xacro:property name="height" value="0.25"/>
+      <xacro:property name="mass" value="590"/>
+      <xacro:property name="inertial_origin_offset_x" value="-0.275"/>
+      <xacro:property name="inertial_origin_offset_z" value="${0.3-wheel_radius}"/>
+      <xacro:property name="max_steer_angle" value="0.5"/>
+
+      <xacro:property name="vehicle_collision_width" value="1.230"/>
+      <xacro:property name="vehicle_collision_length" value="2.660"/>
+      <xacro:property name="vehicle_collision_height" value="1.7"/>
+      <xacro:property name="vehicle_collision_offset_x" value="-0.25"/>
+      <xacro:property name="vehicle_collision_offset_z" value="${1.7/2 - wheel_radius}"/>
+
+      <xacro:property name="PI" value="3.1415926535897931"/>
+
+      <!-- Moments of inertia (rectangular box formulas) -->
+      <xacro:property name="rect_Ixx" value="${(1/12) * mass * (track_width**2 + height**2)}"/>
+      <xacro:property name="rect_Iyy" value="${(1/12) * mass * (wheelbase**2 + height**2)}"/>
+      <xacro:property name="rect_Izz" value="${(1/12) * mass * (wheelbase**2 + track_width**2)}"/>
+
+      <!-- Moments of inertia (cylinder formulas) -->
+      <xacro:property name="wheel_Ixx" value="${(1/12) * wheel_mass * (3*wheel_radius**2 + wheel_width**2)}"/>
+      <xacro:property name="wheel_Iyy" value="${(1/12) * wheel_mass * (3*wheel_radius**2 + wheel_width**2)}"/>
+      <xacro:property name="wheel_Izz" value="${(1/2) * wheel_mass * wheel_radius**2}"/>
+
+      <!-- Initial Robot Pose -->
+      <pose> 0 0 ${wheel_radius} 0 0 0 </pose>
+
+      <!-- Robot Base -->
+      <link name='${prefix}base_link'>
+        <must_be_base_link>true</must_be_base_link>
+        <inertial>
+          <mass>${mass}</mass>
+          <pose>${inertial_origin_offset_x} 0 ${inertial_origin_offset_z} 0 0 0</pose>
+          <inertia>
+            <ixx>${rect_Ixx}</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>${rect_Iyy}</iyy>
+            <iyz>0</iyz>
+            <izz>${rect_Izz}</izz>
+          </inertia>
+        </inertial>
+        <visual name="${prefix}base_link_visual">
+          <geometry>
+            <mesh>
+                <uri>package://caddy_ai2_ros2_gazebo_simulation/description/meshes/stl/rbcar_chassis.stl</uri>
+            </mesh>
+          </geometry>
+          <xacro:material_color rgba="${color_white}"/>
+        </visual>
+        <collision name="${prefix}base_link_collision">
+          <pose>${vehicle_collision_offset_x} 0 ${vehicle_collision_offset_z} 0 0 0 </pose>
+          <geometry>
+            <box>
+              <size>
+                ${vehicle_collision_length} ${vehicle_collision_width} ${vehicle_collision_height}
+              </size>
+            </box>
+          </geometry>
+        </collision>
+      </link>
+
+      <!-- Base Footprint -->
+      <link name="${prefix}base_footprint">
+        <pose relative_to="${prefix}base_link">${vehicle_collision_offset_x} 0.0 -${wheel_radius-0.01} 0 0 0</pose>
+        <visual name="${prefix}base_footprint_visual">
+          <geometry>
+            <box>
+              <size>
+                ${vehicle_collision_length} ${vehicle_collision_width} 0.01
+              </size>
+            </box>
+          </geometry>
+          <xacro:material_color rgba="${color_red}"/>
+        </visual>
+      </link>
+
+      <joint name="${prefix}base_joint" type="fixed">
+        <parent>${prefix}base_link</parent>
+        <child>${prefix}base_footprint</child>
+        <pose relative_to='${prefix}base_footprint'/>
+      </joint>
+
+      <!-- Rear Wheels -->
+      <!-- Rear Right Wheel -->
+      <link name="${prefix}rear_right_wheel">
+        <pose relative_to="${prefix}base_link">-${wheelbase/2} -${track_width/2} 0 0 0 ${PI/2}</pose>
+        <collision name="${prefix}rear_right_wheel_collision">
+          <pose>0 0 0 ${PI/2} 0 ${PI/2}</pose>
+          <geometry>
+            <cylinder>
+              <length>${wheel_width}</length>
+              <radius>${wheel_radius}</radius>
+            </cylinder>
+          </geometry>
+        </collision>
+        <visual name="${prefix}rear_right_wheel_visual">
+          <pose>0 0 0 ${PI/2} 0 ${PI/2}</pose>
+          <geometry>
+            <cylinder>
+              <length>${wheel_width}</length>
+              <radius>${wheel_radius}</radius>
+            </cylinder>
+          </geometry>
+          <xacro:material_color rgba="${color_black}"/>
+        </visual>
+        <inertial>
+          <pose>0 0 0 ${PI/2} 0 ${PI/2}</pose>
+          <mass>${wheel_mass}</mass>
+          <inertia>
+            <ixx>${wheel_Ixx}</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>${wheel_Iyy}</iyy>
+            <iyz>0</iyz>
+            <izz>${wheel_Izz}</izz>
+          </inertia>
+        </inertial>
+      </link>
+
+      <joint name="${prefix}rear_right_wheel_joint" type="revolute">
+        <parent>${prefix}base_link</parent>
+        <child>${prefix}rear_right_wheel</child>
+        <pose relative_to='${prefix}rear_right_wheel'/>
+        <axis>
+          <xyz expressed_in='__model__'>0 1 0</xyz> <!--can be descired to any frame or even arbitrary frames-->
+          <limit>
+            <lower>-1.79769e+308</lower> <!--negative infinity-->
+            <upper>1.79769e+308</upper> <!--positive infinity-->
+          </limit>
+        </axis>
+      </joint>
+
+      <!-- Rear Left Wheel -->
+      <link name="${prefix}rear_left_wheel">
+        <pose relative_to="${prefix}base_link">-${wheelbase/2} ${track_width/2} 0 0 0 ${PI/2}</pose>
+        <collision name="${prefix}rear_left_wheel_collision">
+          <pose>0 0 0 ${PI/2} 0 ${PI/2}</pose>
+          <geometry>
+            <cylinder>
+              <length>${wheel_width}</length>
+              <radius>${wheel_radius}</radius>
+            </cylinder>
+          </geometry>
+        </collision>
+        <visual name="${prefix}rear_left_wheel_visual">
+          <pose>0 0 0 ${PI/2} 0 ${PI/2}</pose>
+          <geometry>
+            <cylinder>
+              <length>${wheel_width}</length>
+              <radius>${wheel_radius}</radius>
+            </cylinder>
+          </geometry>
+          <xacro:material_color rgba="${color_black}"/>
+        </visual>
+        <inertial>
+          <pose>0 0 0 ${PI/2} 0 ${PI/2}</pose>
+          <mass>${wheel_mass}</mass>
+          <inertia>
+            <ixx>${wheel_Ixx}</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>${wheel_Iyy}</iyy>
+            <iyz>0</iyz>
+            <izz>${wheel_Izz}</izz>
+          </inertia>
+        </inertial>
+      </link>
+
+      <joint name="${prefix}rear_left_wheel_joint" type="revolute">
+        <parent>${prefix}base_link</parent>
+        <child>${prefix}rear_left_wheel</child>
+        <pose relative_to='${prefix}rear_left_wheel'/>
+        <axis>
+          <xyz expressed_in='__model__'>0 1 0</xyz> <!--can be descired to any frame or even arbitrary frames-->
+          <limit>
+            <lower>-1.79769e+308</lower> <!--negative infinity-->
+            <upper>1.79769e+308</upper> <!--positive infinity-->
+          </limit>
+        </axis>
+      </joint>
+
+      <!-- Front Wheels -->
+      <!-- Front Right Steering -->
+      <link name="${prefix}front_right_steer_link">
+        <pose relative_to="${prefix}base_link">${wheelbase/2} -${track_width/2} 0 0 0 0</pose>
+      </link>
+        <!-- Justication: inertial needed by simulation to avoid errors -->
+      <!--  <inertial>
+          <mass>0.1</mass>
+          <inertia>
+            <ixx>0.001</ixx>
+            <ixy>0.0</ixy>
+            <ixz>0.0</ixz>
+            <iyy>0.001</iyy>
+            <iyz>0.0</iyz>
+            <izz>0.001</izz>
+          </inertia>
+        </inertial>
+      </link> -->
+
+      <joint name="${prefix}front_right_steer_joint" type="revolute">
+        <parent>${prefix}base_link</parent>
+        <child>${prefix}front_right_steer_link</child>
+        <pose relative_to='${prefix}front_right_steer_link'/>
+        <axis>
+          <xyz expressed_in='__model__'>0 0 1</xyz> <!--can be descired to any frame or even arbitrary frames-->
+          <limit>
+            <lower>${-max_steer_angle}</lower> <!--negative infinity-->
+            <upper>${max_steer_angle}</upper> <!--positive infinity-->
+          </limit>
+        </axis>
+        <!--<dynamics damping="0.2" />
+        <limit effort="1000.0" lower="-1.57" upper="1.57" velocity="30"/>-->
+      </joint>
+
+      <!-- Front Left Steering -->
+      <link name="${prefix}front_left_steer_link">
+        <pose relative_to="${prefix}base_link">${wheelbase/2} ${track_width/2} 0 0 0 0</pose>
+      </link>
+        <!-- Justication: inertial needed by simulation to avoid errors -->
+      <!--  <inertial>
+          <mass>0.1</mass>
+          <inertia>
+            <ixx>0.001</ixx>
+            <ixy>0.0</ixy>
+            <ixz>0.0</ixz>
+            <iyy>0.001</iyy>
+            <iyz>0.0</iyz>
+            <izz>0.001</izz>
+          </inertia>
+        </inertial>
+      </link> -->
+
+      <joint name="${prefix}front_left_steer_joint" type="revolute">
+        <parent>${prefix}base_link</parent>
+        <child>${prefix}front_left_steer_link</child>
+        <pose relative_to='${prefix}front_left_steer_link'/>
+        <axis>
+          <xyz expressed_in='__model__'>0 0 1</xyz> <!--can be descired to any frame or even arbitrary frames-->
+          <limit>
+            <lower>${-max_steer_angle}</lower> <!--negative infinity-->
+            <upper>${max_steer_angle}</upper> <!--positive infinity-->
+          </limit>
+        </axis>
+        <!--<dynamics damping="0.2" />
+        <limit effort="1000.0" lower="-1.57" upper="1.57" velocity="30"/>-->
+      </joint>
+
+      <!-- Front Right Wheel -->
+      <link name="${prefix}front_right_wheel">
+        <pose relative_to="${prefix}front_right_steer_link">0 0 0 -${PI/2} 0 0</pose>
+        <collision name="${prefix}front_right_wheel_collision">
+          <geometry>
+            <cylinder>
+              <length>${wheel_width}</length>
+              <radius>${wheel_radius}</radius>
+            </cylinder>
+          </geometry>
+        </collision>
+        <visual name="${prefix}front_right_wheel_visual">
+          <geometry>
+            <cylinder>
+              <length>${wheel_width}</length>
+              <radius>${wheel_radius}</radius>
+            </cylinder>
+          </geometry>
+          <xacro:material_color rgba="${color_black}"/>
+        </visual>
+        <inertial>
+            <mass>${wheel_mass}</mass>
+            <inertia>
+              <ixx>${wheel_Ixx}</ixx>
+              <ixy>0</ixy>
+              <ixz>0</ixz>
+              <iyy>${wheel_Iyy}</iyy>
+              <iyz>0</iyz>
+              <izz>${wheel_Izz}</izz>
+            </inertia>
+        </inertial>
+      </link>
+
+      <joint name="${prefix}front_right_wheel_joint" type="revolute">
+        <parent>${prefix}front_right_steer_link</parent>
+        <child>${prefix}front_right_wheel</child>
+        <pose relative_to="${prefix}front_right_wheel"/>
+        <axis>
+          <xyz expressed_in='__model__'>0 1 0</xyz> <!--can be descired to any frame or even arbitrary frames-->
+          <limit>
+            <lower>-1.79769e+308</lower> <!--negative infinity-->
+            <upper>1.79769e+308</upper> <!--positive infinity-->
+          </limit>
+        </axis>
+        <!--<dynamics damping="0.2" />-->
+      </joint>
+
+      <!-- Front Left Wheel -->
+      <link name="${prefix}front_left_wheel">
+        <pose relative_to="${prefix}front_left_steer_link">0 0 0 -${PI/2} 0 0</pose>
+        <collision name="${prefix}front_left_wheel_collision">
+          <geometry>
+            <cylinder>
+              <length>${wheel_width}</length>
+              <radius>${wheel_radius}</radius>
+            </cylinder>
+          </geometry>
+        </collision>
+        <visual name="${prefix}front_left_wheel_visual">
+          <geometry>
+            <cylinder>
+              <length>${wheel_width}</length>
+              <radius>${wheel_radius}</radius>
+            </cylinder>
+          </geometry>
+          <xacro:material_color rgba="${color_black}"/>
+        </visual>
+        <inertial>
+            <mass>${wheel_mass}</mass>
+            <inertia>
+              <ixx>${wheel_Ixx}</ixx>
+              <ixy>0</ixy>
+              <ixz>0</ixz>
+              <iyy>${wheel_Iyy}</iyy>
+              <iyz>0</iyz>
+              <izz>${wheel_Izz}</izz>
+            </inertia>
+          </inertial>
+      </link>
+
+      <joint name="${prefix}front_left_wheel_joint" type="revolute">
+        <parent>${prefix}front_left_steer_link</parent>
+        <child>${prefix}front_left_wheel</child>
+        <pose relative_to="${prefix}front_left_wheel"/>
+        <axis>
+          <xyz expressed_in='__model__'>0 1 0</xyz> <!--can be descired to any frame or even arbitrary frames-->
+          <limit>
+            <lower>-1.79769e+308</lower> <!--negative infinity-->
+            <upper>1.79769e+308</upper> <!--positive infinity-->
+          </limit>
+        </axis>
+        <!--<dynamics damping="0.2" />-->
+      </joint>
+
+    </model>
+  </world>
+</sdf>

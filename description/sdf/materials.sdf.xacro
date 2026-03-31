@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <!-- ===================================================== -->
+  <!-- MACRO: material_color                                      -->
+  <!-- Genera un bloque <material> válido para SDF           -->
+  <!-- Uso: <xacro:material_color rgba="${color_grey}"/>          -->
+  <!-- ===================================================== -->
+  <xacro:macro name="material_color" params="rgba">
+    <material>
+      <ambient>${rgba}</ambient>
+      <diffuse>${rgba}</diffuse>
+      <specular>0.1 0.1 0.1 1</specular>
+      <emissive>0 0 0 1</emissive>
+    </material>
+  </xacro:macro>
+
+  <!-- ===================================================== -->
+  <!-- PROPIEDADES: Colores básicos (RGBA en rango [0,1])    -->
+  <!-- Uso: rgba="${color_red}"                              -->
+  <!-- ===================================================== -->
+  
+  <!-- Colores sólidos -->
+  <xacro:property name="color_black"   value="0.0 0.0 0.0 1.0"/>
+  <xacro:property name="color_white"   value="1.0 1.0 1.0 1.0"/>
+  <xacro:property name="color_grey"    value="0.2 0.2 0.2 1.0"/>
+  <xacro:property name="color_dark_grey" value="0.1 0.1 0.1 1.0"/>
+  <xacro:property name="color_light_grey" value="0.7 0.7 0.7 1.0"/>
+  <xacro:property name="color_red"     value="0.8 0.0 0.0 1.0"/>
+  <xacro:property name="color_green"   value="0.0 0.8 0.0 1.0"/>
+  <xacro:property name="color_blue"    value="0.0 0.0 0.8 1.0"/>
+  <xacro:property name="color_yellow"  value="1.0 1.0 0.0 1.0"/>
+  <xacro:property name="color_cyan"    value="0.0 0.8 0.8 1.0"/>
+  <xacro:property name="color_magenta" value="0.8 0.0 0.8 1.0"/>
+  
+  <!-- Colores con cálculo -->
+  <xacro:property name="color_orange"  value="${255/255} ${108/255} ${10/255} 1.0"/>
+  <xacro:property name="color_brown"   value="${222/255} ${207/255} ${195/255} 1.0"/>
+  
+  <!-- Transparente / invisible -->
+  <xacro:property name="color_invisible" value="0.0 0.0 0.0 0.0"/>
+</robot>

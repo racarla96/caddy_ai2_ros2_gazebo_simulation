@@ -146,7 +146,6 @@
     </joint>
 
     <!-- Front Wheels -->
-
     <!-- Front Right Steering -->
     <link name="${prefix}right_steering_link">
       <!-- Justication: inertial needed by simulation to avoid errors -->

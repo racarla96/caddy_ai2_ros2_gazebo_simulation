@@ -1,5 +1,22 @@
 # Caddy AI2 ROS2 Simulation
 
+## Testing sdf
+
+```bash
+### 1. Corregir export
+export GZ_SIM_RESOURCE_PATH='/home/racarla96/ws_ros2_caddy_dev/src/'
+### 2. Procesar Xacro → SDF
+cd ~/ws_ros2_caddy_dev
+colcon build --packages-select bicycle_to_ackermann_steering_adapter bicycle_to_ackermann_traction_adapter caddy_ai2_ros2_gazebo_simulation
+source install/setup.bash
+cd ~/ws_ros2_caddy_dev/src/caddy_ai2_ros2_gazebo_simulation/description/sdf
+xacro caddy_ai2_world.sdf.xacro > caddy_ai2_world.sdf
+### 3. Validar SDF
+gz sdf -p caddy_ai2_world.sdf > /dev/null && echo "✓ SDF válido"
+### 4. Lanzar en Gazebo Sim
+gz sim -v 4 -r caddy_ai2_world.sdf
+```
+
 ## Simulación
 
 ```bash
