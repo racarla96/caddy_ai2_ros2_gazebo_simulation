@@ -1,21 +1,43 @@
 <?xml version="1.0" ?>
 <sdf version="1.11" xmlns:xacro="http://ros.org/wiki/xacro">
 
-  <!-- Incluir materiales y el modelo del robot -->
+  <!-- SDF Specification 1.11 -->
+  <!-- https://sdformat.org/spec/1.11/sdf/ -->
+
+  <!-- ============================================ -->
+  <!-- 1. Definir argumentos globales               -->
+  <!-- ============================================ -->
+  <xacro:arg name="robot1_prefix" default="robot1_"/>
+  <xacro:arg name="robot1_x" default="0"/>
+  <xacro:arg name="robot1_y" default="0"/>
+  <xacro:arg name="robot1_yaw" default="0"/>
+  
+  <xacro:arg name="robot2_prefix" default="robot2_"/>
+  <xacro:arg name="robot2_x" default="3"/>
+  <xacro:arg name="robot2_y" default="0"/>
+  <xacro:arg name="robot2_yaw" default="0"/>
+  
+  <xacro:arg name="robot3_prefix" default="robot3_"/>
+  <xacro:arg name="robot3_x" default="-3"/>
+  <xacro:arg name="robot3_y" default="2"/>
+  <xacro:arg name="robot3_yaw" default="1.57"/>
+
+  <!-- ============================================ -->
+  <!-- 2. Incluir dependencias                      -->
+  <!-- ============================================ -->
   <xacro:include filename="$(find caddy_ai2_ros2_gazebo_simulation)/description/sdf/materials.sdf.xacro"/>
   <xacro:include filename="$(find caddy_ai2_ros2_gazebo_simulation)/description/sdf/caddy_ai2_model.sdf.xacro"/>
 
-  <!-- Parámetros del mundo -->
-  <xacro:arg name="prefix" default="" />
-
+  <!-- ============================================ -->
+  <!-- 3. Definir el mundo                          -->
+  <!-- ============================================ -->
   <world name='base_world'>
     
-    <!-- Configuración de física y plugins -->
+    <!-- Física y plugins (igual que antes) -->
     <physics name="1ms" type="ignored">
       <max_step_size>0.001</max_step_size>
       <real_time_factor>1.0</real_time_factor>
     </physics>
-    
     <plugin filename="gz-sim-physics-system" name="gz::sim::systems::Physics"/>
     <plugin filename="gz-sim-user-commands-system" name="gz::sim::systems::UserCommands"/>
     <plugin filename="gz-sim-scene-broadcaster-system" name="gz::sim::systems::SceneBroadcaster"/>
@@ -24,7 +46,7 @@
       <render_engine>ogre2</render_engine>
     </plugin>
 
-    <!-- Iluminación -->
+    <!-- Luz solar -->
     <light name='sun' type='directional'>
       <cast_shadows>1</cast_shadows>
       <pose>0 0 10 0 -0 0</pose>
@@ -39,7 +61,7 @@
       <direction>-0.5 0.1 -0.9</direction>
     </light>
 
-    <!-- Plano de suelo -->
+    <!-- Ground plane -->
     <model name='ground_plane'>
       <static>1</static>
       <link name='link'>
@@ -106,11 +128,37 @@
       </camera>
     </gui>
 
-    <!-- === INCLUSIÓN DEL MODELO DEL ROBOT === -->
-    <!-- Pose inicial del robot en el mundo -->
-    <xacro:caddy_ai2_model prefix="$(arg prefix)"/>
-    <!-- Nota: si no usas macro wrapper, simplemente copia el contenido del modelo aquí 
-         o usa <include> si conviertes el modelo a SDF puro -->
+    <!-- ============================================ -->
+    <!-- 4. Instanciar múltiples robots               -->
+    <!-- ============================================ -->
+    
+    <!-- Robot 1 -->
+    <xacro:caddy_ai2_robot 
+      prefix="" 
+      x="0" 
+      y="0" 
+      yaw="180"/>
+    <!--<xacro:caddy_ai2_robot 
+      prefix="$(arg robot1_prefix)" 
+      x="$(arg robot1_x)" 
+      y="$(arg robot1_y)" 
+      yaw="$(arg robot1_yaw)"/>-->
+    
+    <!-- Robot 2 -->
+    <!--<xacro:caddy_ai2_robot 
+      prefix="$(arg robot2_prefix)" 
+      x="$(arg robot2_x)" 
+      y="$(arg robot2_y)" 
+      yaw="$(arg robot2_yaw)"/>-->
+    
+    <!-- Robot 3 (descomentar si se necesita) -->
+    <!--
+    <xacro:caddy_ai2_robot 
+      prefix="$(arg robot3_prefix)" 
+      x="$(arg robot3_x)" 
+      y="$(arg robot3_y)" 
+      yaw="$(arg robot3_yaw)"/>
+    -->
 
   </world>
 </sdf>
