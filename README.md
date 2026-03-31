@@ -1,5 +1,33 @@
 # Caddy AI2 ROS2 Simulation
 
+## Simulación
+
+```bash
+colcon build --packages-select bicycle_to_ackermann_steering_adapter bicycle_to_ackermann_traction_adapter caddy_ai2_ros2_gazebo_simulation
+export GZ_SIM_RESOURCE_PATH="$GZ_SIM_RESOURCE_PATH:$(ros2 pkg prefix caddy_ai2_ros2_gazebo_simulation --share)/description/meshes"
+```
+
+# Publicar un valor de posición del steering y velocidad lineal
+ros2 topic pub /forward_position_command_controller/commands std_msgs/msg/Float64MultiArray "{data: [0.3]}" -r 100
+ros2 topic pub /forward_velocity_command_controller/commands std_msgs/msg/Float64MultiArray "{data: [0.3]}" -r 100
+
+ros2 topic pub /bicycle_steering_controller/reference geometry_msgs/msg/TwistStamped "
+header:
+  stamp:
+    sec: 0
+    nanosec: 0
+  frame_id: 'base_link'
+twist:
+  linear:
+    x: 1.0
+    y: 0.0
+    z: 0.0
+  angular:
+    x: 0.0
+    y: 0.0
+    z: 0.5
+"
+
 ## Medidas
 
 ![Plano del vehículo](doc/img/caddy_plane.png)

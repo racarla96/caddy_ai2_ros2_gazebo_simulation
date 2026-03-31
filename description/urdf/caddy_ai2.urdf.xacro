@@ -4,7 +4,7 @@
   <!-- Import Caddy AI2 Materials macro -->
   <xacro:include filename="$(find caddy_ai2_ros2_gazebo_simulation)/description/urdf/materials.urdf.xacro" />
 
-  <xacro:macro name="caddy_ai2" params="parent prefix *origin is_simulation:=true">
+  <xacro:macro name="caddy_ai2" params="prefix *origin is_simulation:=true">
 
     <!-- Define tire properties - Deli Tire 18x8.5-8 (inches) -->
     <xacro:property name="wheel_radius" value="0.235"/>
@@ -39,12 +39,6 @@
 
     <!-- Base Link -->
     <link name="${prefix}base_link" />
-
-    <joint name="${prefix}world_joint" type="fixed">
-      <parent link="world"/>
-      <child link="${prefix}base_link"/>
-      <origin xyz="0 0 ${wheel_radius}" rpy="0 0 0"/>
-    </joint>
 
     <!-- Base Footprint -->
     <link name="${prefix}base_footprint"/>
@@ -89,7 +83,7 @@
     <!-- Rear Wheels -->
     <!-- Rear Right Wheel -->
     <link name="${prefix}rear_right_wheel">
-      <collision>
+      <collision name="${prefix}rear_right_wheel_collision">
         <origin xyz="0 0 0" rpy="${PI/2} 0 ${PI/2}"/>
         <geometry>
           <cylinder length="${wheel_width}" radius="${wheel_radius}"/>
@@ -121,7 +115,7 @@
 
     <!-- Rear Left Wheel -->
     <link name="${prefix}rear_left_wheel">
-        <collision>
+        <collision name="${prefix}rear_left_wheel_collision">
           <origin xyz="0 0 0" rpy="${PI/2} 0 ${PI/2}"/>
           <geometry>
             <cylinder length="${wheel_width}" radius="${wheel_radius}"/>
@@ -190,8 +184,8 @@
     </joint>
 
     <!-- Front Right Wheel -->
-    <link name="front_right_wheel">
-      <collision>
+    <link name="${prefix}front_right_wheel">
+      <collision name="${prefix}front_right_wheel_collision">
         <geometry>
           <cylinder length="${wheel_width}" radius="${wheel_radius}"/>
         </geometry>
@@ -221,7 +215,7 @@
 
     <!-- Front Left Wheel -->
     <link name="${prefix}front_left_wheel">
-      <collision>
+      <collision name="${prefix}front_left_wheel_collision">
         <geometry>
           <cylinder length="${wheel_width}" radius="${wheel_radius}"/>
         </geometry>
@@ -284,9 +278,58 @@
 
       <gazebo>
         <plugin filename="gz_ros2_control-system" name="gz_ros2_control::GazeboSimROS2ControlPlugin">
-          <parameters>$(find caddy_ai2_ros2_gazebo_simulation)/bringup/config/simulation_controllers.yaml</parameters>
+          <parameters>$(find caddy_ai2_ros2_gazebo_simulation)/bringup/config/controllers_simulation.yaml</parameters>
         </plugin>
       </gazebo>
+
+      <gazebo reference="${prefix}rear_right_wheel">
+        <plugin filename="gz-sim-contact-system" name="gz::sim::systems::Contact"/>
+
+        <sensor name="contact_sensor" type="contact">
+          <always_on>true</always_on>
+          <update_rate>1000</update_rate>
+          <contact>
+            <collision>${prefix}rear_right_wheel_collision</collision>
+          </contact>
+        </sensor>
+      </gazebo>
+
+      <gazebo reference="${prefix}rear_left_wheel">
+        <plugin filename="gz-sim-contact-system" name="gz::sim::systems::Contact"/>
+
+        <sensor name="contact_sensor" type="contact">
+          <always_on>true</always_on>
+          <update_rate>1000</update_rate>
+          <contact>
+            <collision>${prefix}rear_left_wheel_collision</collision>
+          </contact>
+        </sensor>
+      </gazebo>
+
+      <gazebo reference="${prefix}front_right_wheel">
+        <plugin filename="gz-sim-contact-system" name="gz::sim::systems::Contact"/>
+
+        <sensor name="contact_sensor" type="contact">
+          <always_on>true</always_on>
+          <update_rate>1000</update_rate>
+          <contact>
+            <collision>${prefix}front_right_wheel_collision</collision>
+          </contact>
+        </sensor>
+      </gazebo>
+
+      <gazebo reference="${prefix}front_left_wheel">
+        <plugin filename="gz-sim-contact-system" name="gz::sim::systems::Contact"/>
+
+        <sensor name="contact_sensor" type="contact">
+          <always_on>true</always_on>
+          <update_rate>1000</update_rate>
+          <contact>
+            <collision>${prefix}front_left_wheel_collision</collision>
+          </contact>
+        </sensor>
+      </gazebo>
+
     </xacro:if>
 
   </xacro:macro>

@@ -5,14 +5,11 @@
   <xacro:arg name="prefix" default="" />
   <xacro:arg name="is_simulation" default="true" />
 
-  <!-- Used for fixing robot -->
-  <link name="world"/>
-
   <!-- Import Caddy AI2 description of the vehicle macro -->
   <xacro:include filename="$(find caddy_ai2_ros2_gazebo_simulation)/description/urdf/caddy_ai2.urdf.xacro" />
 
-  <xacro:caddy_ai2 parent="world" prefix="$(arg prefix)" is_simulation="$(arg is_simulation)">
-    <origin xyz="0 0 0" rpy="0 0 0" />
+  <xacro:caddy_ai2 prefix="$(arg prefix)" is_simulation="$(arg is_simulation)">
+    <origin xyz="0 0 0.235" rpy="0 0 0" />
   </xacro:caddy_ai2>
 
 </robot>
