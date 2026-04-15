@@ -4,6 +4,8 @@
 <!-- |    EDITING THIS FILE BY HAND IS NOT RECOMMENDED                                 | -->
 <!-- =================================================================================== -->
 <sdf version="1.11">
+  <!-- SDF Specification 1.11 -->
+  <!-- https://sdformat.org/spec/1.11/sdf/ -->
   <!-- ===================================================== -->
   <!-- PROPIEDADES: Colores básicos (RGBA en rango [0,1])    -->
   <!-- Uso: rgba="${color_red}"                              -->
@@ -111,10 +113,9 @@
     <!-- 4. Instanciar múltiples robots               -->
     <!-- ============================================ -->
     <model canonical_link="base_link" name="caddy_ai2">
-      <!-- Pose inicial del robot (ahora parametrizada) -->
-      <pose>0 0 0.235 0 0 180</pose>
-      <!-- === LINKS Y JOINTS === -->
-      <!-- Robot Base -->
+      <!-- Pose inicial parametrizada -->
+      <pose>0 0 0.235 0 0 0</pose>
+      <!-- ==================== ROBOT BASE ==================== -->
       <link name="base_link">
         <must_be_base_link>true</must_be_base_link>
         <inertial>
@@ -173,6 +174,7 @@
         <child>base_footprint</child>
         <pose relative_to="base_footprint"/>
       </joint>
+      <!-- ==================== MACROS PARA RUEDAS ==================== -->
       <link name="rear_right_wheel">
         <pose relative_to="base_link">-0.825 -0.5 0 0 0 1.5707963267948966</pose>
         <collision name="rear_right_wheel_collision">
@@ -222,7 +224,17 @@
             <lower>-1e308</lower>
             <upper>1e308</upper>
           </limit>
+          <dynamics damping="0.01" friction="0.01"/>
         </axis>
+        <!-- === gz_ros2_control: VELOCITY para tracción === -->
+        <gz_ros2_control>
+          <command_interface name="velocity">
+            <param name="min">-10</param>
+            <param name="max">10</param>
+          </command_interface>
+          <state_interface name="velocity"/>
+          <state_interface name="position"/>
+        </gz_ros2_control>
       </joint>
       <link name="rear_left_wheel">
         <pose relative_to="base_link">-0.825 0.5 0 0 0 1.5707963267948966</pose>
@@ -273,8 +285,19 @@
             <lower>-1e308</lower>
             <upper>1e308</upper>
           </limit>
+          <dynamics damping="0.01" friction="0.01"/>
         </axis>
+        <!-- === gz_ros2_control: VELOCITY para tracción === -->
+        <gz_ros2_control>
+          <command_interface name="velocity">
+            <param name="min">-10</param>
+            <param name="max">10</param>
+          </command_interface>
+          <state_interface name="velocity"/>
+          <state_interface name="position"/>
+        </gz_ros2_control>
       </joint>
+      <!-- Steering joint: control de POSICIÓN -->
       <link name="front_right_wheel_steer_link">
         <pose relative_to="base_link">0.825 -0.5 0 0 0 0</pose>
       </link>
@@ -288,8 +311,18 @@
             <lower>-0.5</lower>
             <upper>0.5</upper>
           </limit>
+          <dynamics damping="1.0" friction="0.1"/>
         </axis>
+        <!-- === gz_ros2_control: POSITION para dirección === -->
+        <gz_ros2_control>
+          <command_interface name="position">
+            <param name="min">-0.5</param>
+            <param name="max">0.5</param>
+          </command_interface>
+          <state_interface name="position"/>
+        </gz_ros2_control>
       </joint>
+      <!-- Wheel joint: solo estado (sigue pasivamente al steering) -->
       <link name="front_right_wheel">
         <pose relative_to="front_right_wheel_steer_link">0 0 0 -1.5707963267948966 0 0</pose>
         <collision name="front_right_wheel_collision">
@@ -337,7 +370,13 @@
             <upper>1e308</upper>
           </limit>
         </axis>
+        <!-- === Solo state interfaces para rueda delantera === -->
+        <gz_ros2_control>
+          <state_interface name="position"/>
+          <state_interface name="velocity"/>
+        </gz_ros2_control>
       </joint>
+      <!-- Steering joint: control de POSICIÓN -->
       <link name="front_left_wheel_steer_link">
         <pose relative_to="base_link">0.825 0.5 0 0 0 0</pose>
       </link>
@@ -351,8 +390,18 @@
             <lower>-0.5</lower>
             <upper>0.5</upper>
           </limit>
+          <dynamics damping="1.0" friction="0.1"/>
         </axis>
+        <!-- === gz_ros2_control: POSITION para dirección === -->
+        <gz_ros2_control>
+          <command_interface name="position">
+            <param name="min">-0.5</param>
+            <param name="max">0.5</param>
+          </command_interface>
+          <state_interface name="position"/>
+        </gz_ros2_control>
       </joint>
+      <!-- Wheel joint: solo estado (sigue pasivamente al steering) -->
       <link name="front_left_wheel">
         <pose relative_to="front_left_wheel_steer_link">0 0 0 -1.5707963267948966 0 0</pose>
         <collision name="front_left_wheel_collision">
@@ -400,6 +449,11 @@
             <upper>1e308</upper>
           </limit>
         </axis>
+        <!-- === Solo state interfaces para rueda delantera === -->
+        <gz_ros2_control>
+          <state_interface name="position"/>
+          <state_interface name="velocity"/>
+        </gz_ros2_control>
       </joint>
     </model>
     <!--<xacro:caddy_ai2_robot 

@@ -137,7 +137,7 @@
       prefix="" 
       x="0" 
       y="0" 
-      yaw="180"/>
+      yaw="0"/>
     <!--<xacro:caddy_ai2_robot 
       prefix="$(arg robot1_prefix)" 
       x="$(arg robot1_x)" 

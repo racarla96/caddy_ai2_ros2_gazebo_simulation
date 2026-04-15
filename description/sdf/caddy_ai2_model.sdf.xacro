@@ -1,5 +1,6 @@
 <?xml version="1.0" ?>
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
+
   <!-- Include materials -->
   <xacro:include filename="$(find caddy_ai2_ros2_gazebo_simulation)/description/sdf/materials.sdf.xacro"/>
 
@@ -36,11 +37,10 @@
       <xacro:property name="wheel_Iyy" value="${(1/12) * wheel_mass * (3*wheel_radius**2 + wheel_width**2)}"/>
       <xacro:property name="wheel_Izz" value="${(1/2) * wheel_mass * wheel_radius**2}"/>
 
-      <!-- Pose inicial del robot (ahora parametrizada) -->
+      <!-- Pose inicial parametrizada -->
       <pose>${x} ${y} ${z + wheel_radius} 0 0 ${yaw}</pose>
 
-      <!-- === LINKS Y JOINTS === -->
-      <!-- Robot Base -->
+      <!-- ==================== ROBOT BASE ==================== -->
       <link name='${prefix}base_link'>
         <must_be_base_link>true</must_be_base_link>
         <inertial>
@@ -88,7 +88,9 @@
         <pose relative_to='${prefix}base_footprint'/>
       </joint>
 
-      <!-- === MACROS PARA RUEDAS === -->
+      <!-- ==================== MACROS PARA RUEDAS ==================== -->
+      
+      <!-- Ruedas traseras: control de VELOCIDAD -->
       <xacro:macro name="rear_wheel" params="name y_offset">
         <link name="${prefix}${name}">
           <pose relative_to="${prefix}base_link">-${wheelbase/2} ${y_offset} 0 0 0 ${PI/2}</pose>
@@ -120,6 +122,7 @@
             </inertia>
           </inertial>
         </link>
+        
         <joint name="${prefix}${name}_joint" type="revolute">
           <parent>${prefix}base_link</parent>
           <child>${prefix}${name}</child>
@@ -127,14 +130,30 @@
           <axis>
             <xyz expressed_in='__model__'>0 1 0</xyz>
             <limit><lower>-1e308</lower><upper>1e308</upper></limit>
+            <dynamics damping="0.01" friction="0.01"/>
           </axis>
+          
+          <!-- === gz_ros2_control: VELOCITY para tracción === -->
+          <gz_ros2_control>
+            <command_interface name="velocity">
+              <param name="min">-10</param>
+              <param name="max">10</param>
+            </command_interface>
+            <state_interface name="velocity"/>
+            <state_interface name="position"/>
+          </gz_ros2_control>
+          
         </joint>
       </xacro:macro>
 
+      <!-- Ruedas delanteras: steering con control de POSICIÓN + wheel pasivo -->
       <xacro:macro name="front_wheel_assembly" params="name y_offset">
+        
+        <!-- Steering joint: control de POSICIÓN -->
         <link name="${prefix}${name}_steer_link">
           <pose relative_to="${prefix}base_link">${wheelbase/2} ${y_offset} 0 0 0 0</pose>
         </link>
+        
         <joint name="${prefix}${name}_steer_joint" type="revolute">
           <parent>${prefix}base_link</parent>
           <child>${prefix}${name}_steer_link</child>
@@ -142,8 +161,21 @@
           <axis>
             <xyz expressed_in='__model__'>0 0 1</xyz>
             <limit><lower>${-max_steer_angle}</lower><upper>${max_steer_angle}</upper></limit>
+            <dynamics damping="1.0" friction="0.1"/>
           </axis>
+          
+          <!-- === gz_ros2_control: POSITION para dirección === -->
+          <gz_ros2_control>
+            <command_interface name="position">
+              <param name="min">-${max_steer_angle}</param>
+              <param name="max">${max_steer_angle}</param>
+            </command_interface>
+            <state_interface name="position"/>
+          </gz_ros2_control>
+          
         </joint>
+        
+        <!-- Wheel joint: solo estado (sigue pasivamente al steering) -->
         <link name="${prefix}${name}">
           <pose relative_to="${prefix}${name}_steer_link">0 0 0 -${PI/2} 0 0</pose>
           <collision name="${prefix}${name}_collision">
@@ -171,6 +203,7 @@
             </inertia>
           </inertial>
         </link>
+        
         <joint name="${prefix}${name}_joint" type="revolute">
           <parent>${prefix}${name}_steer_link</parent>
           <child>${prefix}${name}</child>
@@ -179,10 +212,17 @@
             <xyz expressed_in='__model__'>0 1 0</xyz>
             <limit><lower>-1e308</lower><upper>1e308</upper></limit>
           </axis>
+          
+          <!-- === Solo state interfaces para rueda delantera === -->
+          <gz_ros2_control>
+            <state_interface name="position"/>
+            <state_interface name="velocity"/>
+          </gz_ros2_control>
+          
         </joint>
       </xacro:macro>
 
-      <!-- Instanciar ruedas -->
+      <!-- ==================== INSTANCIAR RUEDAS ==================== -->
       <xacro:rear_wheel name="rear_right_wheel" y_offset="-${track_width/2}"/>
       <xacro:rear_wheel name="rear_left_wheel" y_offset="${track_width/2}"/>
       <xacro:front_wheel_assembly name="front_right_wheel" y_offset="-${track_width/2}"/>
