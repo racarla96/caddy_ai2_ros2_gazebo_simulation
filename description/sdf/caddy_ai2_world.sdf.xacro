@@ -129,36 +129,10 @@
     </gui>
 
     <!-- ============================================ -->
-    <!-- 4. Instanciar múltiples robots               -->
+    <!-- 4. Robots                                    -->
+    <!-- Los robots se spawnean dinámicamente desde   -->
+    <!-- spawn_robot.launch.py, no en el world SDF.   -->
     <!-- ============================================ -->
-    
-    <!-- Robot 1 -->
-    <xacro:caddy_ai2_robot 
-      prefix="" 
-      x="0" 
-      y="0" 
-      yaw="0"/>
-    <!--<xacro:caddy_ai2_robot 
-      prefix="$(arg robot1_prefix)" 
-      x="$(arg robot1_x)" 
-      y="$(arg robot1_y)" 
-      yaw="$(arg robot1_yaw)"/>-->
-    
-    <!-- Robot 2 -->
-    <!--<xacro:caddy_ai2_robot 
-      prefix="$(arg robot2_prefix)" 
-      x="$(arg robot2_x)" 
-      y="$(arg robot2_y)" 
-      yaw="$(arg robot2_yaw)"/>-->
-    
-    <!-- Robot 3 (descomentar si se necesita) -->
-    <!--
-    <xacro:caddy_ai2_robot 
-      prefix="$(arg robot3_prefix)" 
-      x="$(arg robot3_x)" 
-      y="$(arg robot3_y)" 
-      yaw="$(arg robot3_yaw)"/>
-    -->
 
   </world>
 </sdf>

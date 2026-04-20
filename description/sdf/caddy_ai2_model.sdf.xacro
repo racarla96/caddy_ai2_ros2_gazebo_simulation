@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<robot xmlns:xacro="http://ros.org/wiki/xacro">
+<sdf version="1.11" xmlns:xacro="http://ros.org/wiki/xacro">
 
   <!-- Include materials -->
   <xacro:include filename="$(find caddy_ai2_ros2_gazebo_simulation)/description/sdf/materials.sdf.xacro"/>
@@ -7,7 +7,7 @@
   <!-- ============================================ -->
   <!-- MACRO PRINCIPAL DEL ROBOT                    -->
   <!-- ============================================ -->
-  <xacro:macro name="caddy_ai2_robot" params="prefix:='' x:=0 y:=0 z:=0 yaw:=0">
+  <xacro:macro name="caddy_ai2_robot" params="prefix:='' namespace:=''">
 
     <model name='${prefix}caddy_ai2' canonical_link='${prefix}base_link'>
       
@@ -36,9 +36,6 @@
       <xacro:property name="wheel_Ixx" value="${(1/12) * wheel_mass * (3*wheel_radius**2 + wheel_width**2)}"/>
       <xacro:property name="wheel_Iyy" value="${(1/12) * wheel_mass * (3*wheel_radius**2 + wheel_width**2)}"/>
       <xacro:property name="wheel_Izz" value="${(1/2) * wheel_mass * wheel_radius**2}"/>
-
-      <!-- Pose inicial parametrizada -->
-      <pose>${x} ${y} ${z + wheel_radius} 0 0 ${yaw}</pose>
 
       <!-- ==================== ROBOT BASE ==================== -->
       <link name='${prefix}base_link'>
@@ -160,7 +157,7 @@
           <pose relative_to='${prefix}${name}_steer_link'/>
           <axis>
             <xyz expressed_in='__model__'>0 0 1</xyz>
-            <limit><lower>${-max_steer_angle}</lower><upper>${max_steer_angle}</upper></limit>
+            <limit><lower>${-max_steer_angle}</lower><upper>${max_steer_angle}</upper><effort>1e6</effort><velocity>100</velocity></limit>
             <dynamics damping="1.0" friction="0.1"/>
           </axis>
           
@@ -228,6 +225,71 @@
       <xacro:front_wheel_assembly name="front_right_wheel" y_offset="-${track_width/2}"/>
       <xacro:front_wheel_assembly name="front_left_wheel" y_offset="${track_width/2}"/>
 
+      <!-- ==================== gz_ros2_control ==================== -->
+
+      <!-- Hardware interfaces para ros2_control.
+           sdformat_urdf copia este bloque al URDF resultante, donde el
+           controller_manager lo encuentra al recibir robot_description. -->
+      <ros2_control name="${prefix}caddy_ai2_hardware" type="system">
+        <hardware>
+          <plugin>gz_ros2_control/GazeboSimSystem</plugin>
+        </hardware>
+
+        <!-- Ruedas traseras: velocidad -->
+        <joint name="${prefix}rear_right_wheel_joint">
+          <command_interface name="velocity">
+            <param name="min">-10</param>
+            <param name="max">10</param>
+          </command_interface>
+          <state_interface name="velocity"/>
+          <state_interface name="position"/>
+        </joint>
+        <joint name="${prefix}rear_left_wheel_joint">
+          <command_interface name="velocity">
+            <param name="min">-10</param>
+            <param name="max">10</param>
+          </command_interface>
+          <state_interface name="velocity"/>
+          <state_interface name="position"/>
+        </joint>
+
+        <!-- Steering delantero: posición -->
+        <joint name="${prefix}front_right_wheel_steer_joint">
+          <command_interface name="position">
+            <param name="min">-${max_steer_angle}</param>
+            <param name="max">${max_steer_angle}</param>
+          </command_interface>
+          <state_interface name="position"/>
+        </joint>
+        <joint name="${prefix}front_left_wheel_steer_joint">
+          <command_interface name="position">
+            <param name="min">-${max_steer_angle}</param>
+            <param name="max">${max_steer_angle}</param>
+          </command_interface>
+          <state_interface name="position"/>
+        </joint>
+
+        <!-- Ruedas delanteras: solo estado (pasivas) -->
+        <joint name="${prefix}front_right_wheel_joint">
+          <state_interface name="position"/>
+          <state_interface name="velocity"/>
+        </joint>
+        <joint name="${prefix}front_left_wheel_joint">
+          <state_interface name="position"/>
+          <state_interface name="velocity"/>
+        </joint>
+      </ros2_control>
+
+      <plugin filename="gz_ros2_control-system"
+              name="gz_ros2_control::GazeboSimROS2ControlPlugin">
+        <xacro:if value="${namespace != ''}">
+          <ros>
+            <namespace>/${namespace}</namespace>
+          </ros>
+        </xacro:if>
+        <parameters>$(find caddy_ai2_ros2_gazebo_simulation)/bringup/config/controllers_simulation.yaml</parameters>
+      </plugin>
+
     </model>
   </xacro:macro>
-</robot>
+</sdf>
