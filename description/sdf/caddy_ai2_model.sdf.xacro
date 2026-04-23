@@ -56,6 +56,45 @@
   <!-- Include materials -->
   <xacro:include filename="$(find caddy_ai2_ros2_gazebo_simulation)/description/sdf/materials.sdf.xacro"/>
 
+
+  <!-- ============================================ -->
+  <!-- Sensors parameters                           -->
+  <!-- ============================================ -->
+
+  <!-- IMU offset from base_link -->
+  <xacro:property name="imu_offset_x" value="0.7"/>
+  <xacro:property name="imu_offset_y" value="0.0"/>
+  <xacro:property name="imu_offset_z" value="0.4"/>
+  <!-- IMU Covariance values (TODO: Characterize and update noise parameters) -->
+  <xacro:property name="imu_covariance_gyro" value="0.0"/>
+  <xacro:property name="imu_covariance_accel" value="0.0"/>
+  <!-- IMU Update rate -->
+  <xacro:property name="imu_update_rate" value="100"/>
+
+
+  <!-- LIDAR offset from base_link -->
+  <xacro:property name="lidar_offset_x" value="${wheelbase/2 + 0.125}"/> 
+  <xacro:property name="lidar_offset_y" value="0.0"/>
+  <xacro:property name="lidar_offset_z" value="0.22"/>
+  <!-- LIDAR Update rate -->
+  <xacro:property name="lidar_update_rate" value="75"/>
+  <!-- LIDAR Noise (TODO: Characterize and update noise parameters) -->
+  <xacro:property name="lidar_noise_stddev" value="0.01"/>
+
+
+  <!-- GPS offset from base_link -->
+  <xacro:property name="gps_offset_x" value="${-wheelbase/2}"/>
+  <xacro:property name="gps_offset_y" value="0.0"/>
+  <xacro:property name="gps_offset_z" value="0.5"/>
+  <!-- GPS Update rate -->
+  <xacro:property name="gps_update_rate" value="10"/>
+  <!-- GPS Noise (TODO: Characterize and update noise parameters) -->
+  <xacro:property name="gps_horiz_stddev" value="0.1"/>
+  <xacro:property name="gps_vert_stddev" value="0.1"/>
+
+  <!-- ======== END OF SENSORS PARAMETERS ========= -->
+
+
   <!-- ============================================ -->
   <!-- MACRO PRINCIPAL DEL ROBOT                    -->
   <!-- ============================================ -->
@@ -328,8 +367,135 @@
         <parameters>$(find caddy_ai2_ros2_gazebo_simulation)/bringup/config/controllers_simulation.yaml</parameters>
       </plugin>
 
+
+
+      <!-- ================================================================================================= -->
+      <!-- =                      SENSORS CONFIGURATION SECTION: IMU, LIDAR & GPS                          = -->
+      <!-- ================================================================================================= -->
+
+      <!-- Definimos enlace y unión para la IMU: -->
+      <!-- IMU Link -->
+      <link name="${prefix}imu_link">
+        <pose relative_to="${prefix}base_link">${imu_offset_x} ${imu_offset_y} ${imu_offset_z} 0 0 0</pose>
+        <visual name="${prefix}imu_visual">
+          <geometry>
+            <box>
+              <size>0.05 0.05 0.02</size>
+            </box>
+          </geometry>
+          <xacro:material_color rgba="${color_black}"/>
+        </visual>
+
+        <sensor name="${prefix}imu_sensor" type="imu">
+          <always_on>true</always_on>
+          <!-- IMU Sampling (and publishing) rate -->
+          <update_rate>${imu_update_rate}</update_rate>
+          <visualize>true</visualize>
+          
+          <xacro:if value="${namespace != ''}">
+            <topic>/${namespace}/imu</topic>
+          </xacro:if>
+          <xacro:unless value="${namespace != ''}">
+            <topic>/imu</topic>
+          </xacro:unless>
+          
+          <gz_frame_id>${prefix}imu_link</gz_frame_id>
+          
+          <imu>
+            <angular_velocity>
+              <x><noise type="gaussian"><mean>0.0</mean><stddev>${imu_covariance_gyro}</stddev></noise></x>
+              <y><noise type="gaussian"><mean>0.0</mean><stddev>${imu_covariance_gyro}</stddev></noise></y>
+              <z><noise type="gaussian"><mean>0.0</mean><stddev>${imu_covariance_gyro}</stddev></noise></z>
+            </angular_velocity>
+            <linear_acceleration>
+              <x><noise type="gaussian"><mean>0.0</mean><stddev>${imu_covariance_accel}</stddev></noise></x>
+              <y><noise type="gaussian"><mean>0.0</mean><stddev>${imu_covariance_accel}</stddev></noise></y>
+              <z><noise type="gaussian"><mean>0.0</mean><stddev>${imu_covariance_accel}</stddev></noise></z>
+            </linear_acceleration>
+          </imu>
+        </sensor>
+
+      </link>
+      <!-- IMU Joint -->
+      <joint name="${prefix}imu_joint" type="fixed">
+        <parent>${prefix}base_link</parent>
+        <child>${prefix}imu_link</child>
+      </joint>
+
+      <!-- Definimos enlace y unión para el LIDAR: -->
+      <!-- LIDAR Link -->
+      <link name="${prefix}lidar_link">
+
+        <pose relative_to="${prefix}base_link">${lidar_offset_x} ${lidar_offset_y} ${lidar_offset_z} 0 0 0</pose>
+        
+        <visual name="${prefix}lidar_visual">
+          <geometry>
+            <cylinder>
+              <radius>0.08</radius>
+              <length>0.15</length>
+            </cylinder>
+          </geometry>
+          <xacro:material_color rgba="${color_blue}"/>
+        </visual>
+        
+        <collision name="${prefix}lidar_collision">
+          <geometry>
+            <cylinder>
+              <radius>0.08</radius>
+              <length>0.15</length>
+            </cylinder>
+          </geometry>
+        </collision>
+
+        <sensor name="${prefix}lidar_sensor" type="gpu_lidar">
+          <always_on>true</always_on>
+          <update_rate>${lidar_update_rate}</update_rate> 
+          <visualize>true</visualize> 
+
+          <xacro:if value="${namespace != ''}">
+            <topic>/${namespace}/scan</topic>
+          </xacro:if>
+          <xacro:unless value="${namespace != ''}">
+            <topic>/scan</topic>
+          </xacro:unless>
+
+          <gz_frame_id>${prefix}lidar_link</gz_frame_id>
+          
+          <lidar>
+            <scan>
+              <horizontal>
+                <samples>181</samples>
+                <resolution>1</resolution>
+                <min_angle>-1.570796</min_angle>
+                <max_angle>1.570796</max_angle>
+              </horizontal>
+            </scan>
+            <range>
+              <min>0.10</min> <max>80.0</max> <resolution>0.01</resolution> </range>
+            <noise>
+              <type>gaussian</type>
+              <mean>0.0</mean>
+              <stddev>${lidar_noise_stddev}</stddev> </noise>
+          </lidar>
+        </sensor>
+
+      </link>
+      <!-- LIDAR Joint -->
+      <joint name="${prefix}lidar_joint" type="fixed">
+        <parent>${prefix}base_link</parent>
+        <child>${prefix}lidar_link</child>
+      </joint>
+
+      <!-- Definimos enlace y unión para el GPS (TODO: Merge con rama GPS) --> 
+
+      <!-- ================================================================================================= -->
+      <!-- ============================== END OF SENSORS PLACEMENT SECTION ================================= -->
+      <!-- ================================================================================================= -->
+
+
     </model>
   </xacro:macro>
+
 
   <!-- ============================================ -->
   <!-- Auto-instantiate for standalone use          -->
