@@ -1,0 +1,18 @@
+{% set ns_prefix = '/' + namespace + '/' if namespace else '/' %}
+- ros_topic_name: "{{ ns_prefix }}imu"
+  gz_topic_name: "{{ ns_prefix }}imu"
+  ros_type_name: "sensor_msgs/msg/Imu"
+  gz_type_name: "gz.msgs.IMU"
+  direction: "GZ_TO_ROS"
+
+- ros_topic_name: "{{ ns_prefix }}scan"
+  gz_topic_name: "{{ ns_prefix }}scan"
+  ros_type_name: "sensor_msgs/msg/LaserScan"
+  gz_type_name: "gz.msgs.LaserScan"
+  direction: "GZ_TO_ROS"
+
+- ros_topic_name: "{{ ns_prefix }}navsat"
+  gz_topic_name: "{{ ns_prefix }}navsat"
+  ros_type_name: "sensor_msgs/msg/NavSatFix"
+  gz_type_name: "gz.msgs.NavSat"
+  direction: "GZ_TO_ROS"

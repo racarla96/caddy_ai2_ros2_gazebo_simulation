@@ -2,6 +2,7 @@ import os
 import subprocess
 import tempfile
 
+import yaml
 from jinja2 import Environment, FileSystemLoader
 from ament_index_python.packages import get_package_share_directory
 
@@ -10,8 +11,6 @@ from launch.actions import DeclareLaunchArgument, OpaqueFunction, RegisterEventH
 from launch.event_handlers import OnProcessExit
 from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
-
-_WHEEL_RADIUS = 0.235
 
 
 def generate_launch_description():
@@ -44,15 +43,38 @@ def _spawn_robot(context, *args, **kwargs):
     z   = context.launch_configurations['z']
     yaw = context.launch_configurations['yaw']
 
-    spawn_z = str(float(z) + _WHEEL_RADIUS)
-
     pkg_share = get_package_share_directory('caddy_ai2_ros2_gazebo_simulation')
-    model_xacro = os.path.join(pkg_share, 'description', 'sdf', 'caddy_ai2_model_spawn.sdf.xacro')
+
+    # --- Load robot physical parameters ---
+    params_file = os.path.join(pkg_share, 'bringup', 'config', 'robot_params.yaml')
+    with open(params_file) as f:
+        robot_params = yaml.safe_load(f)
+
+    spawn_z = str(float(z) + robot_params['wheel_radius'])
+
+    model_xacro = os.path.join(pkg_share, 'description', 'sdf', 'caddy_ai2_model.sdf.xacro')
     config_dir  = os.path.join(pkg_share, 'bringup', 'config')
 
-    # --- Process model xacro ---
+    # --- Process model xacro, passing physical params as arguments ---
     result = subprocess.run(
-        ['xacro', model_xacro, f'prefix:={prefix}', f'namespace:={namespace}'],
+        [
+            'xacro', model_xacro,
+            f'prefix:={prefix}',
+            f'namespace:={namespace}',
+            f'wheelbase:={robot_params["wheelbase"]}',
+            f'track_width:={robot_params["track_width"]}',
+            f'wheel_radius:={robot_params["wheel_radius"]}',
+            f'max_steer_angle:={robot_params["max_steer_angle"]}',
+            f'wheel_width:={robot_params["wheel_width"]}',
+            f'wheel_mass:={robot_params["wheel_mass"]}',
+            f'height:={robot_params["height"]}',
+            f'mass:={robot_params["mass"]}',
+            f'vehicle_collision_width:={robot_params["vehicle_collision_width"]}',
+            f'vehicle_collision_length:={robot_params["vehicle_collision_length"]}',
+            f'vehicle_collision_height:={robot_params["vehicle_collision_height"]}',
+            f'vehicle_collision_offset_x:={robot_params["vehicle_collision_offset_x"]}',
+            f'inertial_origin_offset_x:={robot_params["inertial_origin_offset_x"]}',
+        ],
         capture_output=True, text=True, check=True
     )
     robot_description_str = result.stdout
@@ -60,7 +82,7 @@ def _spawn_robot(context, *args, **kwargs):
     # --- Render namespace-specific controllers yaml from Jinja2 template ---
     env = Environment(loader=FileSystemLoader(config_dir), keep_trailing_newline=True)
     template = env.get_template('controllers_simulation.yaml.j2')
-    rendered_yaml = template.render(namespace=namespace, prefix=prefix)
+    rendered_yaml = template.render(namespace=namespace, prefix=prefix, **robot_params)
 
     tmp_yaml = tempfile.NamedTemporaryFile(
         mode='w', suffix='.yaml', prefix='ctrl_ns_', delete=False
@@ -68,6 +90,17 @@ def _spawn_robot(context, *args, **kwargs):
     tmp_yaml.write(rendered_yaml)
     tmp_yaml.close()
     ns_controllers_yaml = tmp_yaml.name
+
+    # --- Render namespace-specific gz bridge yaml from Jinja2 template ---
+    bridge_template = env.get_template('gz_msg_bridge.yaml.j2')
+    rendered_bridge_yaml = bridge_template.render(namespace=namespace)
+
+    tmp_bridge_yaml = tempfile.NamedTemporaryFile(
+        mode='w', suffix='.yaml', prefix='gz_bridge_ns_', delete=False
+    )
+    tmp_bridge_yaml.write(rendered_bridge_yaml)
+    tmp_bridge_yaml.close()
+    ns_bridge_yaml = tmp_bridge_yaml.name
 
     # Replace the original <parameters> path in the SDF with the rendered yaml
     original_params_tag = (
@@ -157,9 +190,19 @@ def _spawn_robot(context, *args, **kwargs):
                    '--inactive'],
     )
 
+    sensor_bridge = Node(
+        package='ros_gz_bridge',
+        executable='parameter_bridge',
+        name='sensor_bridge',
+        namespace=namespace,
+        parameters=[{'config_file': ns_bridge_yaml}],
+        output='screen'
+    )
+
     return [
         node_robot_state_publisher,
         gz_spawn_entity,
+        sensor_bridge,
         RegisterEventHandler(
             OnProcessExit(
                 target_action=gz_spawn_entity,

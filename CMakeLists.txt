@@ -23,7 +23,7 @@ find_package(bicycle_to_ackermann_steering_adapter)
 #install(TARGETS odom2tf_broadcaster DESTINATION lib/${PROJECT_NAME})
 
 install(
-  DIRECTORY bringup code description 
+  DIRECTORY bringup description
   DESTINATION share/${PROJECT_NAME}
 )
 

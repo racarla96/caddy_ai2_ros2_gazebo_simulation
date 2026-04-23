@@ -1,6 +1,58 @@
 <?xml version="1.0" ?>
 <sdf version="1.11" xmlns:xacro="http://ros.org/wiki/xacro">
 
+  <!-- ============================================ -->
+  <!-- Arguments (overridable from CLI or launch)   -->
+  <!-- ============================================ -->
+  <xacro:arg name="prefix"          default=""/>
+  <xacro:arg name="namespace"       default=""/>
+  <xacro:arg name="wheelbase"       default="1.65"/>
+  <xacro:arg name="track_width"     default="1.0"/>
+  <xacro:arg name="wheel_radius"    default="0.235"/>
+  <xacro:arg name="max_steer_angle" default="0.4"/>
+  <xacro:arg name="wheel_width"                default="0.22"/>
+  <xacro:arg name="wheel_mass"                 default="8.7"/>
+  <xacro:arg name="height"                     default="0.25"/>
+  <xacro:arg name="mass"                       default="590"/>
+  <xacro:arg name="vehicle_collision_width"    default="1.230"/>
+  <xacro:arg name="vehicle_collision_length"   default="2.660"/>
+  <xacro:arg name="vehicle_collision_height"   default="1.7"/>
+  <xacro:arg name="vehicle_collision_offset_x" default="-0.25"/>
+  <xacro:arg name="inertial_origin_offset_x"   default="-0.275"/>
+
+  <!-- ============================================ -->
+  <!-- Robot constants                              -->
+  <!-- ============================================ -->
+  <!-- Parameterizable (from robot_params.yaml via launch) -->
+  <xacro:property name="wheelbase"       value="$(arg wheelbase)"/>
+  <xacro:property name="track_width"     value="$(arg track_width)"/>
+  <xacro:property name="wheel_radius"    value="$(arg wheel_radius)"/>
+  <xacro:property name="max_steer_angle" value="$(arg max_steer_angle)"/>
+
+  <!-- Fixed structural properties -->
+  <xacro:property name="wheel_width"                value="$(arg wheel_width)"/>
+  <xacro:property name="wheel_mass"                 value="$(arg wheel_mass)"/>
+  <xacro:property name="height"                     value="$(arg height)"/>
+  <xacro:property name="mass"                       value="$(arg mass)"/>
+  <xacro:property name="PI"                         value="3.1415926535897931"/>
+  <xacro:property name="vehicle_collision_width"    value="$(arg vehicle_collision_width)"/>
+  <xacro:property name="vehicle_collision_length"   value="$(arg vehicle_collision_length)"/>
+  <xacro:property name="vehicle_collision_height"   value="$(arg vehicle_collision_height)"/>
+  <xacro:property name="vehicle_collision_offset_x" value="$(arg vehicle_collision_offset_x)"/>
+  <xacro:property name="inertial_origin_offset_x"   value="$(arg inertial_origin_offset_x)"/>
+
+  <!-- Derived geometry -->
+  <xacro:property name="inertial_origin_offset_z"   value="${0.3 - wheel_radius}"/>
+  <xacro:property name="vehicle_collision_offset_z" value="${vehicle_collision_height / 2 - wheel_radius}"/>
+
+  <!-- Moments of inertia -->
+  <xacro:property name="rect_Ixx"  value="${(1/12) * mass * (track_width**2 + height**2)}"/>
+  <xacro:property name="rect_Iyy"  value="${(1/12) * mass * (wheelbase**2 + height**2)}"/>
+  <xacro:property name="rect_Izz"  value="${(1/12) * mass * (wheelbase**2 + track_width**2)}"/>
+  <xacro:property name="wheel_Ixx" value="${(1/12) * wheel_mass * (3*wheel_radius**2 + wheel_width**2)}"/>
+  <xacro:property name="wheel_Iyy" value="${(1/12) * wheel_mass * (3*wheel_radius**2 + wheel_width**2)}"/>
+  <xacro:property name="wheel_Izz" value="${(1/2) * wheel_mass * wheel_radius**2}"/>
+
   <!-- Include materials -->
   <xacro:include filename="$(find caddy_ai2_ros2_gazebo_simulation)/description/sdf/materials.sdf.xacro"/>
 
@@ -9,37 +61,30 @@
   <!-- ============================================ -->
   <xacro:macro name="caddy_ai2_robot" params="prefix:='' namespace:=''">
 
-    <model name='${prefix}caddy_ai2' canonical_link='${prefix}base_link'>
-      
-      <!-- === CONSTANTES DEL ROBOT === -->
-      <xacro:property name="wheel_radius" value="0.235"/>
-      <xacro:property name="wheel_width" value="0.22"/>
-      <xacro:property name="wheel_mass" value="8.7"/>
-      <xacro:property name="track_width" value="1"/>
-      <xacro:property name="wheelbase" value="1.65"/>
-      <xacro:property name="height" value="0.25"/>
-      <xacro:property name="mass" value="590"/>
-      <xacro:property name="inertial_origin_offset_x" value="-0.275"/>
-      <xacro:property name="inertial_origin_offset_z" value="${0.3-wheel_radius}"/>
-      <xacro:property name="max_steer_angle" value="0.5"/>
-      <xacro:property name="vehicle_collision_width" value="1.230"/>
-      <xacro:property name="vehicle_collision_length" value="2.660"/>
-      <xacro:property name="vehicle_collision_height" value="1.7"/>
-      <xacro:property name="vehicle_collision_offset_x" value="-0.25"/>
-      <xacro:property name="vehicle_collision_offset_z" value="${1.7/2 - wheel_radius}"/>
-      <xacro:property name="PI" value="3.1415926535897931"/>
-
-      <!-- Moments of inertia -->
-      <xacro:property name="rect_Ixx" value="${(1/12) * mass * (track_width**2 + height**2)}"/>
-      <xacro:property name="rect_Iyy" value="${(1/12) * mass * (wheelbase**2 + height**2)}"/>
-      <xacro:property name="rect_Izz" value="${(1/12) * mass * (wheelbase**2 + track_width**2)}"/>
-      <xacro:property name="wheel_Ixx" value="${(1/12) * wheel_mass * (3*wheel_radius**2 + wheel_width**2)}"/>
-      <xacro:property name="wheel_Iyy" value="${(1/12) * wheel_mass * (3*wheel_radius**2 + wheel_width**2)}"/>
-      <xacro:property name="wheel_Izz" value="${(1/2) * wheel_mass * wheel_radius**2}"/>
+    <model name='${prefix}caddy_ai2' canonical_link='${prefix}base_footprint'>
 
       <!-- ==================== ROBOT BASE ==================== -->
+      <!-- Base Footprint -->
+      <link name="${prefix}base_footprint">
+        <pose relative_to="__model__">0 0 0 0 0 0</pose>
+        <visual name="${prefix}base_footprint_visual">
+          <geometry>
+            <box>
+              <size>${vehicle_collision_length} ${vehicle_collision_width} 0.01</size>
+            </box>
+          </geometry>
+          <xacro:material_color rgba="${color_red}"/>
+        </visual>
+      </link>
+
+      <joint name="${prefix}base_joint" type="fixed">
+        <parent>${prefix}base_footprint</parent>
+        <child>${prefix}base_link</child>
+      </joint>
+
+      <!-- Base Link -->
       <link name='${prefix}base_link'>
-        <must_be_base_link>true</must_be_base_link>
+        <pose relative_to="${prefix}base_footprint">0 0 ${wheel_radius} 0 0 0</pose>
         <inertial>
           <mass>${mass}</mass>
           <pose>${inertial_origin_offset_x} 0 ${inertial_origin_offset_z} 0 0 0</pose>
@@ -64,29 +109,21 @@
             </box>
           </geometry>
         </collision>
+        <sensor name="${prefix}navsat_sensor" type="navsat">
+          <always_on>1</always_on>
+          <update_rate>10</update_rate>
+          <pose>0 0 0 0 0 0</pose>
+          <xacro:if value="${namespace != ''}">
+            <topic>/${namespace}/navsat</topic>
+          </xacro:if>
+          <xacro:unless value="${namespace != ''}">
+            <topic>/navsat</topic>
+          </xacro:unless>
+        </sensor>
       </link>
-
-      <!-- Base Footprint -->
-      <link name="${prefix}base_footprint">
-        <pose relative_to="${prefix}base_link">${vehicle_collision_offset_x} 0.0 -${wheel_radius-0.01} 0 0 0</pose>
-        <visual name="${prefix}base_footprint_visual">
-          <geometry>
-            <box>
-              <size>${vehicle_collision_length} ${vehicle_collision_width} 0.01</size>
-            </box>
-          </geometry>
-          <xacro:material_color rgba="${color_red}"/>
-        </visual>
-      </link>
-
-      <joint name="${prefix}base_joint" type="fixed">
-        <parent>${prefix}base_link</parent>
-        <child>${prefix}base_footprint</child>
-        <pose relative_to='${prefix}base_footprint'/>
-      </joint>
 
       <!-- ==================== MACROS PARA RUEDAS ==================== -->
-      
+
       <!-- Ruedas traseras: control de VELOCIDAD -->
       <xacro:macro name="rear_wheel" params="name y_offset">
         <link name="${prefix}${name}">
@@ -119,7 +156,7 @@
             </inertia>
           </inertial>
         </link>
-        
+
         <joint name="${prefix}${name}_joint" type="revolute">
           <parent>${prefix}base_link</parent>
           <child>${prefix}${name}</child>
@@ -129,7 +166,7 @@
             <limit><lower>-1e308</lower><upper>1e308</upper></limit>
             <dynamics damping="0.01" friction="0.01"/>
           </axis>
-          
+
           <!-- === gz_ros2_control: VELOCITY para tracción === -->
           <gz_ros2_control>
             <command_interface name="velocity">
@@ -139,18 +176,18 @@
             <state_interface name="velocity"/>
             <state_interface name="position"/>
           </gz_ros2_control>
-          
+
         </joint>
       </xacro:macro>
 
       <!-- Ruedas delanteras: steering con control de POSICIÓN + wheel pasivo -->
       <xacro:macro name="front_wheel_assembly" params="name y_offset">
-        
+
         <!-- Steering joint: control de POSICIÓN -->
         <link name="${prefix}${name}_steer_link">
           <pose relative_to="${prefix}base_link">${wheelbase/2} ${y_offset} 0 0 0 0</pose>
         </link>
-        
+
         <joint name="${prefix}${name}_steer_joint" type="revolute">
           <parent>${prefix}base_link</parent>
           <child>${prefix}${name}_steer_link</child>
@@ -160,7 +197,7 @@
             <limit><lower>${-max_steer_angle}</lower><upper>${max_steer_angle}</upper><effort>1e6</effort><velocity>100</velocity></limit>
             <dynamics damping="1.0" friction="0.1"/>
           </axis>
-          
+
           <!-- === gz_ros2_control: POSITION para dirección === -->
           <gz_ros2_control>
             <command_interface name="position">
@@ -169,9 +206,9 @@
             </command_interface>
             <state_interface name="position"/>
           </gz_ros2_control>
-          
+
         </joint>
-        
+
         <!-- Wheel joint: solo estado (sigue pasivamente al steering) -->
         <link name="${prefix}${name}">
           <pose relative_to="${prefix}${name}_steer_link">0 0 0 -${PI/2} 0 0</pose>
@@ -200,7 +237,7 @@
             </inertia>
           </inertial>
         </link>
-        
+
         <joint name="${prefix}${name}_joint" type="revolute">
           <parent>${prefix}${name}_steer_link</parent>
           <child>${prefix}${name}</child>
@@ -209,13 +246,13 @@
             <xyz expressed_in='__model__'>0 1 0</xyz>
             <limit><lower>-1e308</lower><upper>1e308</upper></limit>
           </axis>
-          
+
           <!-- === Solo state interfaces para rueda delantera === -->
           <gz_ros2_control>
             <state_interface name="position"/>
             <state_interface name="velocity"/>
           </gz_ros2_control>
-          
+
         </joint>
       </xacro:macro>
 
@@ -282,14 +319,23 @@
 
       <plugin filename="gz_ros2_control-system"
               name="gz_ros2_control::GazeboSimROS2ControlPlugin">
-        <xacro:if value="${namespace != ''}">
-          <ros>
+        <ros>
+          <xacro:if value="${namespace != ''}">
             <namespace>/${namespace}</namespace>
-          </ros>
-        </xacro:if>
+          </xacro:if>
+          <remapping>bicycle_steering_controller/tf_odometry:=/tf</remapping>
+        </ros>
         <parameters>$(find caddy_ai2_ros2_gazebo_simulation)/bringup/config/controllers_simulation.yaml</parameters>
       </plugin>
 
     </model>
   </xacro:macro>
+
+  <!-- ============================================ -->
+  <!-- Auto-instantiate for standalone use          -->
+  <!-- ============================================ -->
+  <xacro:caddy_ai2_robot
+    prefix="$(arg prefix)"
+    namespace="$(arg namespace)"/>
+
 </sdf>

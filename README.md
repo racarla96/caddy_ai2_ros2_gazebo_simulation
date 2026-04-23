@@ -62,11 +62,11 @@ ros2 launch caddy_ai2_ros2_gazebo_simulation world.launch.py
 ```bash
 # Robot 1
 ros2 launch caddy_ai2_ros2_gazebo_simulation spawn_robot.launch.py \
-  robot_name:=robot1 namespace:=robot1 prefix:=robot1_ x:=0.0 y:=0.0
+  robot_name:=robot1 namespace:=robot1 prefix:=robot1/ x:=0.0 y:=0.0
 
 # Robot 2
 ros2 launch caddy_ai2_ros2_gazebo_simulation spawn_robot.launch.py \
-  robot_name:=robot2 namespace:=robot2 prefix:=robot2_ x:=3.0 y:=0.0
+  robot_name:=robot2 namespace:=robot2 prefix:=robot2/ x:=3.0 y:=0.0
 ```
 
 Cada instancia crea su propio `controller_manager` bajo `/<namespace>/controller_manager` gracias al plugin `gz_ros2_control` configurado con el namespace en el SDF.
@@ -79,7 +79,18 @@ Publicar referencia de velocidad y dirección (con namespace `robot1`):
 # Bicycle steering controller
 ros2 topic pub /robot1/bicycle_steering_controller/reference geometry_msgs/msg/TwistStamped "
 header:
-  frame_id: 'robot1_base_link'
+  frame_id: 'robot1/base_link'
+twist:
+  linear:
+    x: 1.0
+  angular:
+    z: 0.5
+"
+
+
+ros2 topic pub /robot2/bicycle_steering_controller/reference geometry_msgs/msg/TwistStamped "
+header:
+  frame_id: 'robot2/base_link'
 twist:
   linear:
     x: 1.0
