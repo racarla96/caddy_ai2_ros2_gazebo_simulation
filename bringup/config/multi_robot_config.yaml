@@ -1,0 +1,65 @@
+# =============================================================================
+# multi_robot_config.yaml
+# Configuración de robots para la simulación multi-robot de caddy_ai2.
+# =============================================================================
+#
+# INSTRUCCIONES PARA AÑADIR UN NUEVO ROBOT:
+# ------------------------------------------
+#  1. Añade un nuevo bloque bajo la clave 'robots:' respetando la indentación
+#     (2 espacios por nivel).
+#
+#  2. Rellena los campos obligatorios:
+#       robot_name  → Nombre único del modelo en Gazebo (sin espacios).
+#       namespace   → Namespace ROS del robot (sin '/'; déjalo vacío "" si
+#                     solo hay un robot y no quieres namespace).
+#       prefix      → Prefijo para los links/joints en el SDF. Debe coincidir
+#                     con el namespace pero añadiendo '_' al final, p.ej.
+#                     si namespace: "robot2" entonces prefix: "robot2_".
+#                     Déjalo vacío "" si namespace también está vacío.
+#       x, y, z     → Posición de spawn en metros (z es sobre el suelo;
+#                     el offset del radio de rueda se añade automáticamente).
+#       yaw         → Orientación inicial en radianes (0.0 = mirando al eje +X).
+#
+#  3. REGLAS IMPORTANTES para evitar conflictos en simulación multi-robot:
+#       - robot_name  debe ser ÚNICO entre todos los robots.
+#       - namespace   debe ser ÚNICO entre todos los robots.
+#       - prefix      debe ser ÚNICO entre todos los robots.
+#       - Las posiciones (x, y) deben estar suficientemente separadas para
+#         que los robots no colisionen al spawnear (recomendado ≥ 3.0 m).
+#
+#  4. Ejemplo de nuevo robot:
+#       - robot_name: caddy_ai2_4
+#         namespace:  robot4
+#         prefix:     robot4_
+#         x:    15.0
+#         y:     0.0
+#         z:     0.0
+#         yaw:   0.0
+#
+# =============================================================================
+
+robots:
+
+  - robot_name: caddy_ai2_1
+    namespace:  robot1
+    prefix:     robot1_
+    x:    0.0
+    y:    0.0
+    z:    0.0
+    yaw:  0.0
+
+  - robot_name: caddy_ai2_2
+    namespace:  robot2
+    prefix:     robot2_
+    x:    5.0
+    y:    0.0
+    z:    0.0
+    yaw:  0.0
+
+  - robot_name: caddy_ai2_3
+    namespace:  robot3
+    prefix:     robot3_
+    x:    10.0
+    y:     0.0
+    z:     0.0
+    yaw:   0.0
