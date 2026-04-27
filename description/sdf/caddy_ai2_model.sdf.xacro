@@ -102,6 +102,12 @@
 
     <model name='${prefix}caddy_ai2' canonical_link='${prefix}base_footprint'>
 
+      <plugin filename="libignition-gazebo-pose-publisher-system"
+        name="ignition::gazebo::systems::PosePublisher">
+        <publish_model_pose>true</publish_model_pose>
+        <update_frequency>100</update_frequency>
+      </plugin>
+
       <!-- ==================== ROBOT BASE ==================== -->
       <!-- Base Footprint -->
       <link name="${prefix}base_footprint">
