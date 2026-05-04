@@ -95,7 +95,7 @@ twist:
   linear:
     x: 1.0
   angular:
-    z: 0.5
+    z: -0.5
 "
 
 # Controladores directos (forward command) — alternativos al bicycle_steering_controller.

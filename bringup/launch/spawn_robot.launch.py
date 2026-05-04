@@ -1,5 +1,4 @@
 import os
-import subprocess
 import tempfile
 
 import yaml
@@ -43,75 +42,92 @@ def _spawn_robot(context, *args, **kwargs):
     z   = context.launch_configurations['z']
     yaw = context.launch_configurations['yaw']
 
-    pkg_share = get_package_share_directory('caddy_ai2_ros2_gazebo_simulation')
+    gz_share     = get_package_share_directory('caddy_ai2_ros2_gazebo_simulation')
+    desc_share   = get_package_share_directory('caddy_ai2_ros2_description')
+    sensor_share = get_package_share_directory('caddy_ai2_ros2_sensors_sick_lms_291')
 
-    # --- Load robot physical parameters ---
-    params_file = os.path.join(pkg_share, 'bringup', 'config', 'robot_params.yaml')
+    # --- Load robot physical parameters (single source of truth in description pkg) ---
+    params_file = os.path.join(desc_share, 'config', 'robot_params.yaml')
     with open(params_file) as f:
         robot_params = yaml.safe_load(f)
 
+    # --- Load SICK LMS 291 sensor parameters ---
+    sensor_params_file = os.path.join(sensor_share, 'bringup', 'config', 'sensor_params.yaml')
+    with open(sensor_params_file) as f:
+        sensor_params = yaml.safe_load(f)
+
     spawn_z = str(float(z) + robot_params['wheel_radius'])
 
-    model_xacro = os.path.join(pkg_share, 'description', 'sdf', 'caddy_ai2_model.sdf.xacro')
-    config_dir  = os.path.join(pkg_share, 'bringup', 'config')
-
-    # --- Process model xacro, passing physical params as arguments ---
-    result = subprocess.run(
-        [
-            'xacro', model_xacro,
-            f'prefix:={prefix}',
-            f'namespace:={namespace}',
-            f'wheelbase:={robot_params["wheelbase"]}',
-            f'track_width:={robot_params["track_width"]}',
-            f'wheel_radius:={robot_params["wheel_radius"]}',
-            f'max_steer_angle:={robot_params["max_steer_angle"]}',
-            f'wheel_width:={robot_params["wheel_width"]}',
-            f'wheel_mass:={robot_params["wheel_mass"]}',
-            f'height:={robot_params["height"]}',
-            f'mass:={robot_params["mass"]}',
-            f'vehicle_collision_width:={robot_params["vehicle_collision_width"]}',
-            f'vehicle_collision_length:={robot_params["vehicle_collision_length"]}',
-            f'vehicle_collision_height:={robot_params["vehicle_collision_height"]}',
-            f'vehicle_collision_offset_x:={robot_params["vehicle_collision_offset_x"]}',
-            f'inertial_origin_offset_x:={robot_params["inertial_origin_offset_x"]}',
-        ],
-        capture_output=True, text=True, check=True
-    )
-    robot_description_str = result.stdout
-
     # --- Render namespace-specific controllers yaml from Jinja2 template ---
-    env = Environment(loader=FileSystemLoader(config_dir), keep_trailing_newline=True)
-    template = env.get_template('controllers_simulation.yaml.j2')
-    rendered_yaml = template.render(namespace=namespace, prefix=prefix, **robot_params)
+    cfg_dir = os.path.join(gz_share, 'bringup', 'config')
+    env = Environment(loader=FileSystemLoader(cfg_dir), keep_trailing_newline=True)
 
-    tmp_yaml = tempfile.NamedTemporaryFile(
+    rendered_ctrl = env.get_template('controllers_simulation.yaml.j2').render(
+        namespace=namespace, prefix=prefix, **robot_params
+    )
+    tmp_ctrl = tempfile.NamedTemporaryFile(
         mode='w', suffix='.yaml', prefix='ctrl_ns_', delete=False
     )
-    tmp_yaml.write(rendered_yaml)
-    tmp_yaml.close()
-    ns_controllers_yaml = tmp_yaml.name
+    tmp_ctrl.write(rendered_ctrl)
+    tmp_ctrl.close()
+    ns_controllers_yaml = tmp_ctrl.name
 
     # --- Render namespace-specific gz bridge yaml from Jinja2 template ---
-    bridge_template = env.get_template('gz_msg_bridge.yaml.j2')
-    rendered_bridge_yaml = bridge_template.render(namespace=namespace)
-
-    tmp_bridge_yaml = tempfile.NamedTemporaryFile(
+    rendered_bridge = env.get_template('gz_msg_bridge.yaml.j2').render(namespace=namespace)
+    tmp_bridge = tempfile.NamedTemporaryFile(
         mode='w', suffix='.yaml', prefix='gz_bridge_ns_', delete=False
     )
-    tmp_bridge_yaml.write(rendered_bridge_yaml)
-    tmp_bridge_yaml.close()
-    ns_bridge_yaml = tmp_bridge_yaml.name
+    tmp_bridge.write(rendered_bridge)
+    tmp_bridge.close()
+    ns_bridge_yaml = tmp_bridge.name
 
-    # Replace the original <parameters> path in the SDF with the rendered yaml
-    original_params_tag = (
-        f'<parameters>'
-        f'{os.path.join(pkg_share, "bringup", "config", "controllers_simulation.yaml")}'
-        f'</parameters>'
+    # --- Render SICK LMS 291 SDF fragment ---
+    hw = sensor_params['hardware']
+    op = sensor_params['operation']
+    si = sensor_params['simulation']
+    no = si['noise']
+
+    sensor_env = Environment(
+        loader=FileSystemLoader(os.path.join(sensor_share, 'description')),
+        keep_trailing_newline=True,
     )
-    robot_description_str = robot_description_str.replace(
-        original_params_tag,
-        f'<parameters>{ns_controllers_yaml}</parameters>',
-        1,
+    sick_lidar_fragment = sensor_env.get_template('sensor.sdf.j2').render(
+        prefix=prefix,
+        namespace=namespace,
+        parent_link=f'{prefix}base_link',
+        x=robot_params['lidar_sick_x'],
+        y=robot_params['lidar_sick_y'],
+        z=robot_params['lidar_sick_z'],
+        roll=robot_params['lidar_sick_roll'],
+        pitch=robot_params['lidar_sick_pitch'],
+        yaw=robot_params['lidar_sick_yaw'],
+        frame_id=hw['frame_id'],
+        weight=hw['weight'],
+        angle_min=si['angle_min'],
+        angle_max=si['angle_max'],
+        range_min=si['range_min'],
+        range_max=si['range_max'],
+        frequency=op['frequency'],
+        resolution=op['resolution'],
+        use_gpu=True,
+        mesh_uri=f'package://caddy_ai2_ros2_sensors_sick_lms_291/meshes/SICK_LMS291-S05.dae',
+        noise_enabled=no['enabled'],
+        noise_type=no['type'],
+        noise_mean=no['mean'],
+        noise_stddev=no['stddev'],
+        noise_bias_mean=no['bias_mean'],
+        noise_bias_stddev=no['bias_stddev'],
+    )
+
+    # --- Render SDF model from Jinja2 template ---
+    sdf_dir = os.path.join(gz_share, 'description', 'sdf')
+    env_sdf = Environment(loader=FileSystemLoader(sdf_dir), keep_trailing_newline=True)
+    robot_description_str = env_sdf.get_template('caddy_ai2_model.sdf.j2').render(
+        namespace=namespace,
+        prefix=prefix,
+        controllers_yaml_path=ns_controllers_yaml,
+        sick_lidar_fragment=sick_lidar_fragment,
+        **robot_params,
     )
 
     rd_topic = f'/{namespace}/robot_description' if namespace else '/robot_description'
