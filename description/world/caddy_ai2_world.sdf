@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<sdf version="1.11" xmlns:xacro="http://ros.org/wiki/xacro">
+<sdf version="1.11">
 
   <!-- SDF Specification 1.11 -->
   <!-- https://sdformat.org/spec/1.11/sdf/ -->
@@ -67,10 +67,9 @@
             </plane>
           </geometry>
           <material>
-            <script>
-              <uri>file://media/materials/scripts/gazebo.material</uri>
-              <name>Gazebo/Grey</name>
-            </script>
+            <ambient>0.8 0.8 0.8 1</ambient>
+            <diffuse>0.8 0.8 0.8 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
           </material>
         </visual>
       </link>

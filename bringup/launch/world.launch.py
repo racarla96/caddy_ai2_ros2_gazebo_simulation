@@ -1,6 +1,4 @@
 import os
-import subprocess
-import tempfile
 
 from ament_index_python.packages import get_package_share_directory
 
@@ -17,25 +15,14 @@ def generate_launch_description():
 
     world_arg = DeclareLaunchArgument(
         'world',
-        default_value='caddy_ai2_world.sdf.xacro',
-        description='World xacro file name inside description/sdf/'
+        default_value='caddy_ai2_world.sdf',
+        description='World SDF file name inside description/world/'
     )
 
     def launch_gz_sim(context, *args, **kwargs):
         pkg_share = get_package_share_directory('caddy_ai2_ros2_gazebo_simulation')
         world_filename = context.launch_configurations['world']
-        world_xacro = os.path.join(pkg_share, 'description', 'sdf', world_filename)
-
-        result = subprocess.run(
-            ['xacro', world_xacro],
-            capture_output=True, text=True, check=True
-        )
-
-        tmp = tempfile.NamedTemporaryFile(
-            mode='w', suffix='.sdf', prefix='gz_world_', delete=False
-        )
-        tmp.write(result.stdout)
-        tmp.close()
+        world_sdf = os.path.join(pkg_share, 'description', 'world', world_filename)
 
         gz_sim = IncludeLaunchDescription(
             PythonLaunchDescriptionSource([
@@ -43,7 +30,7 @@ def generate_launch_description():
                     FindPackageShare('ros_gz_sim'), 'launch', 'gz_sim.launch.py'
                 ])
             ]),
-            launch_arguments={'gz_args': f'-r {tmp.name}'}.items()
+            launch_arguments={'gz_args': f'-r {world_sdf}'}.items()
         )
 
         clock_bridge = Node(

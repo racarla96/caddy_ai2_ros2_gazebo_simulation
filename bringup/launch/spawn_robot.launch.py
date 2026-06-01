@@ -6,8 +6,9 @@ from jinja2 import Environment, FileSystemLoader
 from ament_index_python.packages import get_package_share_directory
 
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, OpaqueFunction, RegisterEventHandler
+from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, OpaqueFunction, RegisterEventHandler
 from launch.event_handlers import OnProcessExit
+from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
 
@@ -42,21 +43,15 @@ def _spawn_robot(context, *args, **kwargs):
     z   = context.launch_configurations['z']
     yaw = context.launch_configurations['yaw']
 
-    gz_share     = get_package_share_directory('caddy_ai2_ros2_gazebo_simulation')
-    desc_share   = get_package_share_directory('caddy_ai2_ros2_description')
-    sensor_share = get_package_share_directory('caddy_ai2_ros2_sensors_sick_lms_291')
+    gz_share   = get_package_share_directory('caddy_ai2_ros2_gazebo_simulation')
+    desc_share = get_package_share_directory('caddy_ai2_ros2_description')
 
     # --- Load robot physical parameters (single source of truth in description pkg) ---
-    params_file = os.path.join(desc_share, 'config', 'robot_params.yaml')
+    params_file = os.path.join(desc_share, 'bringup', 'config', 'robot_params.yaml')
     with open(params_file) as f:
         robot_params = yaml.safe_load(f)
 
-    # --- Load SICK LMS 291 sensor parameters ---
-    sensor_params_file = os.path.join(sensor_share, 'bringup', 'config', 'sensor_params.yaml')
-    with open(sensor_params_file) as f:
-        sensor_params = yaml.safe_load(f)
-
-    spawn_z = str(float(z) + robot_params['wheel_radius'])
+    spawn_z = z  # base_footprint is the canonical link; base_link offset is already in the SDF
 
     # --- Render namespace-specific controllers yaml from Jinja2 template ---
     cfg_dir = os.path.join(gz_share, 'bringup', 'config')
@@ -81,52 +76,68 @@ def _spawn_robot(context, *args, **kwargs):
     tmp_bridge.close()
     ns_bridge_yaml = tmp_bridge.name
 
-    # --- Render SICK LMS 291 SDF fragment ---
-    hw = sensor_params['hardware']
-    op = sensor_params['operation']
-    si = sensor_params['simulation']
-    no = si['noise']
+    # --- Render sensor fragments (link + visual + joint + Gazebo plugin when simulation=true) ---
+    urdf_sensor_fragments = []
+    for sensor_name, sensor_cfg in robot_params.get('sensors', {}).items():
+        if not sensor_cfg.get('enabled', True):
+            continue
 
-    sensor_env = Environment(
-        loader=FileSystemLoader(os.path.join(sensor_share, 'description')),
+        sensor_type = sensor_cfg['type']
+        s_share = get_package_share_directory(sensor_cfg['package'])
+        pose = sensor_cfg['pose']
+        urdf_tpl = os.path.join(s_share, 'description', 'sensor.urdf.j2')
+        if not os.path.isfile(urdf_tpl):
+            continue
+
+        s_env = Environment(
+            loader=FileSystemLoader(os.path.join(s_share, 'description')),
+            keep_trailing_newline=True,
+        )
+        render_kwargs = dict(
+            prefix=prefix,
+            sensor_name=sensor_name,
+            frame_id=sensor_cfg['frame_id'],
+            x=pose['x'], y=pose['y'], z=pose['z'],
+            roll=pose['roll'], pitch=pose['pitch'], yaw=pose['yaw'],
+            sensor_share=s_share,
+            simulation=True,
+        )
+
+        if sensor_type in ('range_lidar', '2d_lidar'):
+            sensor_params_file = os.path.join(s_share, 'bringup', 'config', 'sensor_params.yaml')
+            with open(sensor_params_file) as f:
+                sp = yaml.safe_load(f)
+            si = sp['simulation']
+            op = sp['operation']
+            no = si['noise']
+            render_kwargs.update(
+                namespace=namespace,
+                angle_min=si['angle_min'], angle_max=si['angle_max'],
+                range_min=si['range_min'], range_max=si['range_max'],
+                frequency=op['frequency'], resolution=op['resolution'],
+                use_gpu=True,
+                noise_enabled=no['enabled'], noise_mean=no['mean'], noise_stddev=no['stddev'],
+            )
+
+        urdf_sensor_fragments.append(s_env.get_template('sensor.urdf.j2').render(**render_kwargs))
+
+    sensors_urdf_fragment = '\n'.join(urdf_sensor_fragments)
+
+    # --- Render URDF with Gazebo plugins injected via template inheritance ---
+    # FileSystemLoader searches gz_urdf_dir first (child template), then desc_urdf_dir (base template).
+    gz_urdf_dir   = os.path.join(gz_share,   'description', 'model', 'urdf')
+    desc_urdf_dir = os.path.join(desc_share, 'description', 'model', 'urdf')
+    env_urdf = Environment(
+        loader=FileSystemLoader([gz_urdf_dir, desc_urdf_dir]),
         keep_trailing_newline=True,
     )
-    sick_lidar_fragment = sensor_env.get_template('sensor.sdf.j2').render(
-        prefix=prefix,
-        namespace=namespace,
-        parent_link=f'{prefix}base_link',
-        x=robot_params['lidar_sick_x'],
-        y=robot_params['lidar_sick_y'],
-        z=robot_params['lidar_sick_z'],
-        roll=robot_params['lidar_sick_roll'],
-        pitch=robot_params['lidar_sick_pitch'],
-        yaw=robot_params['lidar_sick_yaw'],
-        frame_id=hw['frame_id'],
-        weight=hw['weight'],
-        angle_min=si['angle_min'],
-        angle_max=si['angle_max'],
-        range_min=si['range_min'],
-        range_max=si['range_max'],
-        frequency=op['frequency'],
-        resolution=op['resolution'],
-        use_gpu=True,
-        mesh_uri=f'package://caddy_ai2_ros2_sensors_sick_lms_291/meshes/SICK_LMS291-S05.dae',
-        noise_enabled=no['enabled'],
-        noise_type=no['type'],
-        noise_mean=no['mean'],
-        noise_stddev=no['stddev'],
-        noise_bias_mean=no['bias_mean'],
-        noise_bias_stddev=no['bias_stddev'],
-    )
-
-    # --- Render SDF model from Jinja2 template ---
-    sdf_dir = os.path.join(gz_share, 'description', 'sdf')
-    env_sdf = Environment(loader=FileSystemLoader(sdf_dir), keep_trailing_newline=True)
-    robot_description_str = env_sdf.get_template('caddy_ai2_model.sdf.j2').render(
+    robot_description_urdf_str = env_urdf.get_template('caddy_ai2_model_sim.urdf.j2').render(
+        simulation=True,
         namespace=namespace,
         prefix=prefix,
         controllers_yaml_path=ns_controllers_yaml,
-        sick_lidar_fragment=sick_lidar_fragment,
+        sensors_urdf_fragment=sensors_urdf_fragment,
+        desc_share=desc_share,
         **robot_params,
     )
 
@@ -138,7 +149,7 @@ def _spawn_robot(context, *args, **kwargs):
         namespace=namespace,
         output='screen',
         parameters=[{
-            'robot_description': robot_description_str,
+            'robot_description': robot_description_urdf_str,
             'use_sim_time': True,
         }]
     )
@@ -188,24 +199,6 @@ def _spawn_robot(context, *args, **kwargs):
                    '--param-file', ns_controllers_yaml],
     )
 
-    forward_position_command_controller_spawner = Node(
-        package='controller_manager',
-        executable='spawner',
-        namespace=namespace,
-        arguments=['forward_position_command_controller',
-                   '--param-file', ns_controllers_yaml,
-                   '--inactive'],
-    )
-
-    forward_velocity_command_controller_spawner = Node(
-        package='controller_manager',
-        executable='spawner',
-        namespace=namespace,
-        arguments=['forward_velocity_command_controller',
-                   '--param-file', ns_controllers_yaml,
-                   '--inactive'],
-    )
-
     sensor_bridge = Node(
         package='ros_gz_bridge',
         executable='parameter_bridge',
@@ -215,8 +208,20 @@ def _spawn_robot(context, *args, **kwargs):
         output='screen'
     )
 
+    display_launch = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            os.path.join(desc_share, 'bringup', 'launch', 'display.launch.py')
+        ),
+        launch_arguments={
+            'namespace':  namespace,
+            'prefix':     prefix,
+            'simulation': 'true',
+        }.items(),
+    )
+
     return [
         node_robot_state_publisher,
+        display_launch,
         gz_spawn_entity,
         sensor_bridge,
         RegisterEventHandler(
@@ -241,15 +246,6 @@ def _spawn_robot(context, *args, **kwargs):
             OnProcessExit(
                 target_action=ackermann_traction_controller_spawner,
                 on_exit=[bicycle_steering_controller_spawner],
-            )
-        ),
-        RegisterEventHandler(
-            OnProcessExit(
-                target_action=bicycle_steering_controller_spawner,
-                on_exit=[
-                    forward_position_command_controller_spawner,
-                    forward_velocity_command_controller_spawner,
-                ],
             )
         ),
     ]

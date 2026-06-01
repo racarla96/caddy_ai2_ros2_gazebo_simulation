@@ -1,5 +1,11 @@
 # Caddy AI2 ROS2 Gazebo Simulation
 
+# Problemas
+
+Encontré dos problemas. El primero y más grave: base_footprint es el canonical link pero no tiene <inertial> — Gazebo trata los modelos con canonical link sin masa como estáticos. El segundo: spawn_z añade wheel_radius de más, por lo que el robot flota sobre el suelo sin contacto. Ambas cosas juntas explican el comportamiento.
+
+La solución: hacer base_link el canonical link y ajustar la jerarquía, y también añadir fricción en las ruedas ya que falta. Leamos el bloque afectado completo primero:
+
 ## Estructura del paquete
 
 ```

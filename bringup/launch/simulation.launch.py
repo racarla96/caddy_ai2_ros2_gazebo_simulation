@@ -9,8 +9,8 @@ def generate_launch_description():
 
     return LaunchDescription([
         # World arguments
-        DeclareLaunchArgument('world', default_value='caddy_ai2_world.sdf.xacro',
-                              description='World xacro file name inside description/sdf/'),
+        DeclareLaunchArgument('world', default_value='caddy_ai2_world.sdf',
+                              description='World SDF file name inside description/world/'),
 
         # Robot spawn arguments
         DeclareLaunchArgument('robot_name', default_value='caddy_ai2'),
@@ -34,7 +34,7 @@ def generate_launch_description():
             }.items()
         ),
 
-        # Spawn one robot
+        # Spawn one robot (includes display.launch.py for robot_state_publisher_rviz + RViz)
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource([
                 PathJoinSubstitution([

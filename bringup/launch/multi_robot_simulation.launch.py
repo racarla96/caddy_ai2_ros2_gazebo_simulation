@@ -101,7 +101,7 @@ def generate_launch_description():
         DeclareLaunchArgument(
             'world',
             default_value='caddy_ai2_world.sdf.xacro',
-            description='World xacro file name inside description/sdf/',
+            description='World xacro file name inside description/world/',
         ),
 
         # Robots config argument

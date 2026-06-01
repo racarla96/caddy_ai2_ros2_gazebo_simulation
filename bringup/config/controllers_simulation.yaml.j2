@@ -11,10 +11,6 @@
       type: bicycle_to_ackermann_traction_adapter/BicycleToAckermannTractionAdapter
     bicycle_steering_controller:
       type: bicycle_steering_controller/BicycleSteeringController
-    forward_position_command_controller:
-      type: forward_command_controller/ForwardCommandController
-    forward_velocity_command_controller:
-      type: forward_command_controller/ForwardCommandController
 
 {{ ns }}bicycle_steering_controller:
   ros__parameters:
@@ -56,15 +52,3 @@
     output_traction_names:
       - {{ prefix }}rear_right_wheel_joint
       - {{ prefix }}rear_left_wheel_joint
-
-{{ ns }}forward_position_command_controller:
-  ros__parameters:
-    joints:
-      - bicycle_to_ackermann_steering_adapter/center_steering_joint
-    interface_name: position
-
-{{ ns }}forward_velocity_command_controller:
-  ros__parameters:
-    joints:
-      - bicycle_to_ackermann_traction_adapter/center_traction_joint
-    interface_name: velocity
