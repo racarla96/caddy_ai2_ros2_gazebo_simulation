@@ -51,6 +51,54 @@
     </joint>
   </ros2_control>
 
+  <!-- ==================== AXLE CENTER LINKS: preserve in Gazebo ==================== -->
+  <gazebo reference="{{ prefix }}front_axle_center_joint">
+    <preserveFixedJoint>true</preserveFixedJoint>
+  </gazebo>
+  <gazebo reference="{{ prefix }}rear_axle_center_joint">
+    <preserveFixedJoint>true</preserveFixedJoint>
+  </gazebo>
+
+{%- set ns_prefix = ('/' + namespace + '/') if namespace else '/' %}
+
+  <!-- ==================== GROUND TRUTH ODOMETRY ==================== -->
+  <gazebo>
+    <plugin filename="gz-sim-odometry-publisher-system"
+            name="gz::sim::systems::OdometryPublisher">
+      <dimensions>3</dimensions>
+      <odom_frame>world</odom_frame>
+      <robot_base_frame>{{ prefix }}base_footprint</robot_base_frame>
+      <odom_publish_frequency>50</odom_publish_frequency>
+      <odom_topic>{{ ns_prefix }}ground_truth/odometry</odom_topic>
+      <tf_topic>{{ ns_prefix }}ground_truth/tf</tf_topic>
+    </plugin>
+  </gazebo>
+
+  <!-- ==================== NAVSAT / GPS (ground truth — no noise) ==================== -->
+  <gazebo reference="{{ prefix }}base_footprint">
+    <sensor name="{{ prefix }}navsat_base" type="navsat">
+      <topic>{{ ns_prefix }}navsat/base/fix</topic>
+      <update_rate>5</update_rate>
+      <always_on>true</always_on>
+    </sensor>
+  </gazebo>
+
+  <gazebo reference="{{ prefix }}front_axle_center_link">
+    <sensor name="{{ prefix }}navsat_front_axle" type="navsat">
+      <topic>{{ ns_prefix }}navsat/front_axle/fix</topic>
+      <update_rate>5</update_rate>
+      <always_on>true</always_on>
+    </sensor>
+  </gazebo>
+
+  <gazebo reference="{{ prefix }}rear_axle_center_link">
+    <sensor name="{{ prefix }}navsat_rear_axle" type="navsat">
+      <topic>{{ ns_prefix }}navsat/rear_axle/fix</topic>
+      <update_rate>5</update_rate>
+      <always_on>true</always_on>
+    </sensor>
+  </gazebo>
+
   <!-- ==================== GAZEBO PLUGIN ==================== -->
   <gazebo>
     <plugin filename="gz_ros2_control-system"

@@ -16,13 +16,33 @@ def generate_launch_description():
     world_arg = DeclareLaunchArgument(
         'world',
         default_value='caddy_ai2_world.sdf',
-        description='World SDF file name inside description/world/'
+        description='World SDF filename (relative to description/world/) or absolute path'
+    )
+
+    gz_resource_path_arg = DeclareLaunchArgument(
+        'gz_resource_path',
+        default_value='',
+        description='Extra directory prepended to GZ_SIM_RESOURCE_PATH (e.g. ~/PX4-gazebo-models)'
     )
 
     def launch_gz_sim(context, *args, **kwargs):
         pkg_share = get_package_share_directory('caddy_ai2_ros2_gazebo_simulation')
-        world_filename = context.launch_configurations['world']
-        world_sdf = os.path.join(pkg_share, 'description', 'world', world_filename)
+        world_value = context.launch_configurations['world']
+        extra_resource_path = context.launch_configurations.get('gz_resource_path', '')
+
+        # Accept both absolute paths and filenames relative to description/world/
+        if os.path.isabs(world_value):
+            world_sdf = world_value
+        else:
+            world_sdf = os.path.join(pkg_share, 'description', 'world', world_value)
+
+        # Build GZ_SIM_RESOURCE_PATH: extra path + package share + existing env
+        pkg_prefix_share = os.path.join(
+            os.path.dirname(os.path.dirname(pkg_share)), 'share'
+        )
+        existing = os.environ.get('GZ_SIM_RESOURCE_PATH', '')
+        parts = [p for p in [extra_resource_path, pkg_prefix_share, existing] if p]
+        resource_path = os.pathsep.join(parts)
 
         gz_sim = IncludeLaunchDescription(
             PythonLaunchDescriptionSource([
@@ -41,16 +61,12 @@ def generate_launch_description():
             output='screen'
         )
 
-        return [gz_sim, clock_bridge]
+        set_resource_path = SetEnvironmentVariable('GZ_SIM_RESOURCE_PATH', resource_path)
+
+        return [set_resource_path, gz_sim, clock_bridge]
 
     return LaunchDescription([
-        SetEnvironmentVariable(
-            'GZ_SIM_RESOURCE_PATH',
-            PathJoinSubstitution([
-                FindPackagePrefix('caddy_ai2_ros2_gazebo_simulation'),
-                'share'
-            ])
-        ),
         world_arg,
+        gz_resource_path_arg,
         OpaqueFunction(function=launch_gz_sim),
     ])

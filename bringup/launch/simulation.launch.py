@@ -10,7 +10,9 @@ def generate_launch_description():
     return LaunchDescription([
         # World arguments
         DeclareLaunchArgument('world', default_value='caddy_ai2_world.sdf',
-                              description='World SDF file name inside description/world/'),
+                              description='World SDF filename (relative to description/world/) or absolute path'),
+        DeclareLaunchArgument('gz_resource_path', default_value='',
+                              description='Extra directory prepended to GZ_SIM_RESOURCE_PATH'),
 
         # Robot spawn arguments
         DeclareLaunchArgument('robot_name', default_value='caddy_ai2'),
@@ -31,6 +33,7 @@ def generate_launch_description():
             ]),
             launch_arguments={
                 'world': LaunchConfiguration('world'),
+                'gz_resource_path': LaunchConfiguration('gz_resource_path'),
             }.items()
         ),
 

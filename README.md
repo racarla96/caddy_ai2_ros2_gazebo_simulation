@@ -1,149 +1,155 @@
-# Caddy AI2 ROS2 Gazebo Simulation
+# caddy_ai2_ros2_gazebo_simulation
 
-# Problemas
+**ROS 2:** Jazzy | **Simulador:** Gazebo Harmonic (gz-sim 8) | **Proyecto:** CERVAREC
 
-Encontré dos problemas. El primero y más grave: base_footprint es el canonical link pero no tiene <inertial> — Gazebo trata los modelos con canonical link sin masa como estáticos. El segundo: spawn_z añade wheel_radius de más, por lo que el robot flota sobre el suelo sin contacto. Ambas cosas juntas explican el comportamiento.
+Paquete de simulación del robot agrícola Caddy AI2 en Gazebo Harmonic. Orquesta el spawn del robot, los controladores ros2_control, el bridge Gazebo↔ROS2 y la visualización en RViz. El modelo URDF de simulación extiende via herencia Jinja2 el template base de `caddy_ai2_ros2_description`, añadiendo los plugins de Gazebo y ros2_control.
 
-La solución: hacer base_link el canonical link y ajustar la jerarquía, y también añadir fricción en las ruedas ya que falta. Leamos el bloque afectado completo primero:
+---
 
-## Estructura del paquete
+## Estructura
 
 ```
 caddy_ai2_ros2_gazebo_simulation/
 ├── bringup/
 │   ├── config/
-│   │   ├── controllers_simulation.yaml   # Configuración de ros2_control
-│   │   └── gz_msg_bridge.yaml            # Bridges de mensajes Gazebo ↔ ROS2
-│   └── launch/
-│       ├── world.launch.py               # Lanza Gazebo con el world (sin robots)
-│       ├── spawn_robot.launch.py         # Spawna una instancia de robot
-│       └── simulation.launch.py          # World + un robot (caso por defecto)
-└── description/
-    └── sdf/
-        ├── caddy_ai2_model.sdf.xacro     # Macro del modelo del robot
-        ├── caddy_ai2_model_spawn.sdf.xacro  # Wrapper para spawn individual
-        ├── caddy_ai2_world.sdf.xacro     # World (sin robots embebidos)
-        └── materials.sdf.xacro           # Colores / materiales
+│   │   ├── controllers_simulation.yaml.j2   # Controladores ros2_control (Jinja2)
+│   │   └── gz_msg_bridge.yaml.j2            # Bridge Gazebo↔ROS2 con frame_id (Jinja2)
+│   ├── launch/
+│   │   ├── world.launch.py                  # Lanza Gazebo con el world
+│   │   ├── spawn_robot.launch.py            # Spawna una instancia de robot
+│   │   ├── simulation.launch.py             # World + un robot (caso por defecto)
+│   │   └── multi_robot_simulation.launch.py # World + N robots
+│   └── rviz/
+│       └── caddy.rviz
+├── description/
+│   ├── model/urdf/
+│   │   └── caddy_ai2_model_sim.urdf.j2  # Extiende caddy_ai2_model.urdf.j2 (Jinja2)
+│   └── world/
+│       ├── caddy_ai2_world.sdf          # World por defecto (plano, Madrid GPS)
+│       └── baylands.sdf                 # World PX4 baylands (SF Bay Area GPS)
+└── doc/img/                             # Imágenes de documentación
 ```
+
+---
+
+## Arquitectura
+
+```
+robot_params.yaml  (caddy_ai2_ros2_description)
+        │
+        ├─[Jinja2]──► caddy_ai2_model.urdf.j2      (base, sin plugins Gazebo)
+        │                     │ {%- extends %}
+        │             caddy_ai2_model_sim.urdf.j2   (sim: ros2_control + sensores)
+        │
+        ├─[Jinja2]──► controllers_simulation.yaml.j2
+        └─[Jinja2]──► gz_msg_bridge.yaml.j2
+
+gz_msg_bridge.yaml.j2 → ros_gz_bridge (parameter_bridge)
+  ├── /imu              (gz.msgs.IMU → sensor_msgs/Imu)
+  ├── /sick_lms_291/scan (gz.msgs.LaserScan → sensor_msgs/LaserScan)
+  ├── /ydlidar_x4/scan  (gz.msgs.LaserScan → sensor_msgs/LaserScan)
+  ├── /navsat           (gz.msgs.NavSat → sensor_msgs/NavSatFix)
+  ├── /ground_truth/odometry (gz.msgs.Odometry → nav_msgs/Odometry)
+  ├── /navsat/base/fix       (gz.msgs.NavSat → sensor_msgs/NavSatFix)
+  ├── /navsat/front_axle/fix (gz.msgs.NavSat → sensor_msgs/NavSatFix)
+  └── /navsat/rear_axle/fix  (gz.msgs.NavSat → sensor_msgs/NavSatFix)
+```
+
+### Sensores en simulación
+
+El modelo de simulación incluye:
+
+| Sensor | Tipo | Topic | Frecuencia |
+|---|---|---|---|
+| SBG IG-500N (IMU) | `imu` | `/imu` | configurable |
+| SICK LMS291 (LIDAR 2D) | `gpu_lidar`/`lidar` | `/sick_lms_291/scan` | configurable |
+| YDLidar X4 (LIDAR 2D) | `gpu_lidar`/`lidar` | `/ydlidar_x4/scan` | configurable |
+| NavSat genérico | `navsat` | `/navsat` | configurable |
+| NavSat base_footprint | `navsat` | `/navsat/base/fix` | 5 Hz |
+| NavSat eje delantero | `navsat` | `/navsat/front_axle/fix` | 5 Hz |
+| NavSat eje trasero | `navsat` | `/navsat/rear_axle/fix` | 5 Hz |
+| Odometría ground truth | `OdometryPublisher` | `/ground_truth/odometry` | 50 Hz |
+
+---
 
 ## Build
 
 ```bash
-colcon build --packages-select \
-  bicycle_to_ackermann_steering_adapter \
-  bicycle_to_ackermann_traction_adapter \
-  caddy_ai2_ros2_gazebo_simulation
+colcon build --packages-select caddy_ai2_ros2_gazebo_simulation
 source install/setup.bash
 ```
 
-## Simulación — robot único
+---
+
+## Uso
+
+### Robot único (caso por defecto)
 
 ```bash
 ros2 launch caddy_ai2_ros2_gazebo_simulation simulation.launch.py
 ```
 
-Argumentos disponibles:
-
-| Argumento     | Descripción                              | Por defecto               |
-|---------------|------------------------------------------|---------------------------|
-| `world`       | Fichero xacro del world (en `description/sdf/`) | `caddy_ai2_world.sdf.xacro` |
-| `robot_name`  | Nombre del modelo en Gazebo              | `caddy_ai2`               |
-| `namespace`   | Namespace ROS2 del robot                 | `` (vacío)                |
-| `prefix`      | Prefijo para nombres de links y joints   | `` (vacío)                |
-| `x`, `y`, `z` | Posición de spawn (m)                    | `0.0`                     |
-| `yaw`         | Orientación de spawn (rad)               | `0.0`                     |
-
-## Simulación — multi-robot
-
-El world y el spawn de robots están separados para poder lanzar N robots de forma independiente.
-
-**Paso 1 — lanzar el world (una sola vez):**
+### World alternativo (baylands)
 
 ```bash
-ros2 launch caddy_ai2_ros2_gazebo_simulation world.launch.py
+# Primera vez: descarga modelos desde Gazebo Fuel (~100 MB, requiere internet)
+ros2 launch caddy_ai2_ros2_gazebo_simulation simulation.launch.py \
+  world:=baylands.sdf
 ```
 
-**Paso 2 — spawnar cada robot en un terminal distinto:**
+### World externo (ruta absoluta)
 
 ```bash
-# Robot 1
+ros2 launch caddy_ai2_ros2_gazebo_simulation simulation.launch.py \
+  world:=/ruta/absoluta/mi_mundo.sdf \
+  gz_resource_path:=/ruta/a/modelos_externos
+```
+
+### Multi-robot
+
+```bash
+# Paso 1 — lanzar el world (una sola vez)
+ros2 launch caddy_ai2_ros2_gazebo_simulation world.launch.py
+
+# Paso 2 — spawnar cada robot
 ros2 launch caddy_ai2_ros2_gazebo_simulation spawn_robot.launch.py \
   robot_name:=robot1 namespace:=robot1 prefix:=robot1/ x:=0.0 y:=0.0
 
-# Robot 2
 ros2 launch caddy_ai2_ros2_gazebo_simulation spawn_robot.launch.py \
   robot_name:=robot2 namespace:=robot2 prefix:=robot2/ x:=3.0 y:=0.0
 ```
 
-Cada instancia crea su propio `controller_manager` bajo `/<namespace>/controller_manager` gracias al plugin `gz_ros2_control` configurado con el namespace en el SDF.
+### Argumentos de `simulation.launch.py`
 
-## Control manual
+| Argumento | Default | Descripción |
+|---|---|---|
+| `world` | `caddy_ai2_world.sdf` | Fichero SDF (relativo a `description/world/`) o ruta absoluta |
+| `gz_resource_path` | `` | Directorio extra para `GZ_SIM_RESOURCE_PATH` |
+| `robot_name` | `caddy_ai2` | Nombre del modelo en Gazebo |
+| `namespace` | `` | Namespace ROS2 |
+| `prefix` | `` | Prefijo de TF frames |
+| `x`, `y`, `z` | `0.0` | Posición de spawn (m) |
+| `yaw` | `0.0` | Orientación de spawn (rad) |
 
-Publicar referencia de velocidad y dirección (con namespace `robot1`):
-
-```bash
-# Bicycle steering controller
-ros2 topic pub /robot1/bicycle_steering_controller/reference geometry_msgs/msg/TwistStamped "
-header:
-  frame_id: 'robot1/base_link'
-twist:
-  linear:
-    x: 1.0
-  angular:
-    z: 0.5
-"
-
-
-ros2 topic pub /robot2/bicycle_steering_controller/reference geometry_msgs/msg/TwistStamped "
-header:
-  frame_id: 'robot2/base_link'
-twist:
-  linear:
-    x: 1.0
-  angular:
-    z: -0.5
-"
-
-# Controladores directos (forward command) — alternativos al bicycle_steering_controller.
-# Se cargan inactivos para evitar conflicto de interfaces. Activar tras desactivar bicycle_steering_controller:
-ros2 control switch_controllers --deactivate bicycle_steering_controller --activate forward_position_command_controller forward_velocity_command_controller --controller-manager /robot1/controller_manager
-
-ros2 topic pub /robot1/forward_position_command_controller/commands std_msgs/msg/Float64MultiArray "{data: [0.3]}" -r 100
-ros2 topic pub /robot1/forward_velocity_command_controller/commands std_msgs/msg/Float64MultiArray "{data: [0.3]}" -r 100
-```
-
-Sin namespace (robot único con `simulation.launch.py` por defecto):
+### Control manual
 
 ```bash
-ros2 topic pub /bicycle_steering_controller/reference geometry_msgs/msg/TwistStamped "
-header:
-  frame_id: 'base_link'
-twist:
-  linear:
-    x: 1.0
-  angular:
-    z: 0.5
-"
+ros2 topic pub /bicycle_steering_controller/reference geometry_msgs/msg/TwistStamped "{
+  header: {frame_id: 'base_link'},
+  twist: {linear: {x: 1.0}, angular: {z: 0.3}}
+}"
 ```
+
+### Verificar sensores
+
+```bash
+ros2 topic list | grep -E "navsat|ground_truth|imu|scan"
+ros2 topic hz /ground_truth/odometry          # debe ser ~50 Hz
+ros2 topic echo /navsat/base/fix --once
+```
+
+---
 
 ## Medidas del vehículo
 
 ![Plano del vehículo](doc/img/caddy_plane.png)
-
-![Concepto del vehículo](doc/img/car_concept.jpeg)
-
-## Modelo visual (chassis STL)
-
-El archivo STL del chassis tiene un alineamiento definido respecto a los ejes del vehículo, pero no tiene en cuenta el centro de masas. Para el aspecto visual se aplica un alineamiento considerando las medidas aproximadas y la escala del modelo.
-
-El wheelbase en el modelo visual es 16.50 mm (escala 1:100), equivalente a 1650 mm = 1.65 m en el real.
-
-![Alineamiento 1](doc/img/chassis_stl_align_1.png)
-![Alineamiento 2](doc/img/chassis_stl_align_2.png)
-![Alineamiento 3](doc/img/chassis_stl_align_3.png)
-![Alineamiento 4](doc/img/chassis_stl_align_4.png)
-
-## TODOs
-
-- [ ] Medir aspectos reales del vehículo (centro de gravedad, masa, etc.) — EN PROGRESO
-- [ ] Resolver asimetría en distribución de pesos: ¿mover atrás el bloque de inercia es realista?

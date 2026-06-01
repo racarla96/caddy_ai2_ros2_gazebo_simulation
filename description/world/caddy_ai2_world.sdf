@@ -116,7 +116,8 @@
     <!-- GPS Plugin and coordinates transform configuration -->
     <spherical_coordinates>
       <surface_model>EARTH_WGS84</surface_model>
-      <world_frame_orientation>ENU</world_frame_orientation> <latitude_deg>40.4168</latitude_deg>
+      <world_frame_orientation>ENU</world_frame_orientation> 
+      <latitude_deg>40.4168</latitude_deg>
       <longitude_deg>-3.7038</longitude_deg>
       <elevation>600.0</elevation>
       <heading_deg>0</heading_deg>
