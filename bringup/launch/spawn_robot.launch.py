@@ -52,6 +52,7 @@ def _render_sensor_fragments(robot_params, prefix, gazebo=False, namespace=''):
         render_kwargs = dict(
             prefix=prefix,
             sensor_name=sensor_name,
+            sensor_type=sensor_type,
             frame_id=sensor_cfg['frame_id'],
             x=pose['x'], y=pose['y'], z=pose['z'],
             roll=pose['roll'], pitch=pose['pitch'], yaw=pose['yaw'],
@@ -80,6 +81,12 @@ def _render_sensor_fragments(robot_params, prefix, gazebo=False, namespace=''):
                     noise_enabled=True,
                     gyro_mean=no['gyro']['mean'], gyro_stddev=no['gyro']['stddev'],
                     accel_mean=no['accel']['mean'], accel_stddev=no['accel']['stddev'],
+                )
+            elif sensor_type == 'gps':
+                si = sp['simulation']
+                render_kwargs.update(
+                    namespace=namespace,
+                    update_rate=si.get('gps_update_rate', 5),
                 )
         fragments.append(s_env.get_template('sensor.urdf.j2').render(**render_kwargs))
     return '\n'.join(fragments)
