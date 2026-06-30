@@ -63,7 +63,7 @@ def _render_sensor_fragments(robot_params, prefix, gazebo=False, namespace=''):
             sensor_params_file = os.path.join(s_share, 'bringup', 'config', 'sensor_params.yaml')
             with open(sensor_params_file) as f:
                 sp = yaml.safe_load(f)
-            if sensor_type in ('range_lidar', '2d_lidar'):
+            if sensor_type in ('range_lidar', 'lidar_2d'):
                 si, op, no = sp['simulation'], sp['operation'], sp['simulation']['noise']
                 render_kwargs.update(
                     namespace=namespace,
@@ -252,10 +252,9 @@ def _spawn_robot(context):
         node_robot_description_publisher_rviz,
         node_rviz2,
         gz_spawn_entity,
-        sensor_bridge,
         RegisterEventHandler(OnProcessExit(
             target_action=gz_spawn_entity,
-            on_exit=[joint_state_broadcaster_spawner],
+            on_exit=[sensor_bridge, joint_state_broadcaster_spawner],
         )),
         RegisterEventHandler(OnProcessExit(
             target_action=joint_state_broadcaster_spawner,
