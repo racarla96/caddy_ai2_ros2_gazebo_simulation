@@ -1,0 +1,2567 @@
+<?xml version="1.0" ?>
+<sdf version="1.10">
+  <world name="track">
+
+    <physics name="default_physics" default="true" type="ode">
+      <max_step_size>0.001</max_step_size>
+      <real_time_factor>1</real_time_factor>
+    </physics>
+
+    <plugin filename="gz-sim-physics-system"
+            name="gz::sim::systems::Physics"/>
+    <plugin filename="gz-sim-user-commands-system"
+            name="gz::sim::systems::UserCommands"/>
+    <plugin filename="gz-sim-scene-broadcaster-system"
+            name="gz::sim::systems::SceneBroadcaster"/>
+    <plugin filename="gz-sim-imu-system" name="gz::sim::systems::Imu"/>
+    <plugin filename="gz-sim-navsat-system" name="gz::sim::systems::NavSat"/>
+    <plugin filename="gz-sim-sensors-system" name="gz::sim::systems::Sensors">
+      <render_engine>ogre2</render_engine>
+    </plugin>
+
+    <light type="directional" name="sun">
+      <cast_shadows>true</cast_shadows>
+      <pose>0 0 10 0 0 0</pose>
+      <diffuse>0.9 0.9 0.9 1</diffuse>
+      <specular>0.2 0.2 0.2 1</specular>
+      <direction>-0.5 0.1 -0.9</direction>
+    </light>
+
+    <model name="ground_plane">
+      <static>true</static>
+      <link name="link">
+        <collision name="collision">
+          <geometry>
+            <plane><normal>0 0 1</normal><size>1000 1000</size></plane>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <plane><normal>0 0 1</normal><size>1000 1000</size></plane>
+          </geometry>
+          <material>
+            <ambient>0.55 0.55 0.55 1</ambient>
+            <diffuse>0.55 0.55 0.55 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="cone_left_0">
+      <static>true</static>
+      <pose>30.1575 -2.7964 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>0.000 0.000 1.000 1</ambient>
+            <diffuse>0.000 0.000 1.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_left_1">
+      <static>true</static>
+      <pose>29.4839 0.1938 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>0.000 0.000 1.000 1</ambient>
+            <diffuse>0.000 0.000 1.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_left_2">
+      <static>true</static>
+      <pose>28.7827 3.1091 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>0.000 0.000 1.000 1</ambient>
+            <diffuse>0.000 0.000 1.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_left_3">
+      <static>true</static>
+      <pose>28.0531 5.8798 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>0.000 0.000 1.000 1</ambient>
+            <diffuse>0.000 0.000 1.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_left_4">
+      <static>true</static>
+      <pose>27.1778 8.8464 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>0.000 0.000 1.000 1</ambient>
+            <diffuse>0.000 0.000 1.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_left_5">
+      <static>true</static>
+      <pose>26.2624 11.5620 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>0.000 0.000 1.000 1</ambient>
+            <diffuse>0.000 0.000 1.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_left_6">
+      <static>true</static>
+      <pose>25.2423 14.1759 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>0.000 0.000 1.000 1</ambient>
+            <diffuse>0.000 0.000 1.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_left_7">
+      <static>true</static>
+      <pose>24.0051 16.8673 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>0.000 0.000 1.000 1</ambient>
+            <diffuse>0.000 0.000 1.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_left_8">
+      <static>true</static>
+      <pose>22.7828 19.5827 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>0.000 0.000 1.000 1</ambient>
+            <diffuse>0.000 0.000 1.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_left_9">
+      <static>true</static>
+      <pose>21.5841 22.3060 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>0.000 0.000 1.000 1</ambient>
+            <diffuse>0.000 0.000 1.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_left_10">
+      <static>true</static>
+      <pose>20.3279 24.9154 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>0.000 0.000 1.000 1</ambient>
+            <diffuse>0.000 0.000 1.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_left_11">
+      <static>true</static>
+      <pose>18.8444 27.4407 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>0.000 0.000 1.000 1</ambient>
+            <diffuse>0.000 0.000 1.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_left_12">
+      <static>true</static>
+      <pose>17.2808 29.4191 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>0.000 0.000 1.000 1</ambient>
+            <diffuse>0.000 0.000 1.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_left_13">
+      <static>true</static>
+      <pose>15.3639 31.0335 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>0.000 0.000 1.000 1</ambient>
+            <diffuse>0.000 0.000 1.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_left_14">
+      <static>true</static>
+      <pose>13.0575 32.0924 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>0.000 0.000 1.000 1</ambient>
+            <diffuse>0.000 0.000 1.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_left_15">
+      <static>true</static>
+      <pose>10.5450 32.6362 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>0.000 0.000 1.000 1</ambient>
+            <diffuse>0.000 0.000 1.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_left_16">
+      <static>true</static>
+      <pose>7.5011 32.9154 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>0.000 0.000 1.000 1</ambient>
+            <diffuse>0.000 0.000 1.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_left_17">
+      <static>true</static>
+      <pose>4.6946 32.9492 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>0.000 0.000 1.000 1</ambient>
+            <diffuse>0.000 0.000 1.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_left_18">
+      <static>true</static>
+      <pose>1.7488 32.8168 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>0.000 0.000 1.000 1</ambient>
+            <diffuse>0.000 0.000 1.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_left_19">
+      <static>true</static>
+      <pose>-0.9436 32.5702 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>0.000 0.000 1.000 1</ambient>
+            <diffuse>0.000 0.000 1.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_left_20">
+      <static>true</static>
+      <pose>-3.8960 32.1723 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>0.000 0.000 1.000 1</ambient>
+            <diffuse>0.000 0.000 1.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_left_21">
+      <static>true</static>
+      <pose>-6.7185 31.6642 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>0.000 0.000 1.000 1</ambient>
+            <diffuse>0.000 0.000 1.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_left_22">
+      <static>true</static>
+      <pose>-9.5621 31.0049 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>0.000 0.000 1.000 1</ambient>
+            <diffuse>0.000 0.000 1.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_left_23">
+      <static>true</static>
+      <pose>-12.2009 30.2066 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>0.000 0.000 1.000 1</ambient>
+            <diffuse>0.000 0.000 1.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_left_24">
+      <static>true</static>
+      <pose>-14.6228 29.1142 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>0.000 0.000 1.000 1</ambient>
+            <diffuse>0.000 0.000 1.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_left_25">
+      <static>true</static>
+      <pose>-16.8805 27.5947 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>0.000 0.000 1.000 1</ambient>
+            <diffuse>0.000 0.000 1.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_left_26">
+      <static>true</static>
+      <pose>-18.9141 25.7657 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>0.000 0.000 1.000 1</ambient>
+            <diffuse>0.000 0.000 1.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_left_27">
+      <static>true</static>
+      <pose>-20.9493 23.5497 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>0.000 0.000 1.000 1</ambient>
+            <diffuse>0.000 0.000 1.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_left_28">
+      <static>true</static>
+      <pose>-22.8330 21.3152 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>0.000 0.000 1.000 1</ambient>
+            <diffuse>0.000 0.000 1.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_left_29">
+      <static>true</static>
+      <pose>-24.8003 19.0298 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>0.000 0.000 1.000 1</ambient>
+            <diffuse>0.000 0.000 1.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_left_30">
+      <static>true</static>
+      <pose>-26.9882 16.7882 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>0.000 0.000 1.000 1</ambient>
+            <diffuse>0.000 0.000 1.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_left_31">
+      <static>true</static>
+      <pose>-29.4774 14.6550 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>0.000 0.000 1.000 1</ambient>
+            <diffuse>0.000 0.000 1.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_left_32">
+      <static>true</static>
+      <pose>-31.7080 12.8747 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>0.000 0.000 1.000 1</ambient>
+            <diffuse>0.000 0.000 1.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_left_33">
+      <static>true</static>
+      <pose>-34.0020 10.9909 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>0.000 0.000 1.000 1</ambient>
+            <diffuse>0.000 0.000 1.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_left_34">
+      <static>true</static>
+      <pose>-36.1136 9.0005 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>0.000 0.000 1.000 1</ambient>
+            <diffuse>0.000 0.000 1.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_left_35">
+      <static>true</static>
+      <pose>-37.6330 7.0761 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>0.000 0.000 1.000 1</ambient>
+            <diffuse>0.000 0.000 1.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_left_36">
+      <static>true</static>
+      <pose>-38.4683 4.9592 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>0.000 0.000 1.000 1</ambient>
+            <diffuse>0.000 0.000 1.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_left_37">
+      <static>true</static>
+      <pose>-38.2891 2.7268 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>0.000 0.000 1.000 1</ambient>
+            <diffuse>0.000 0.000 1.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_left_38">
+      <static>true</static>
+      <pose>-37.4301 0.3531 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>0.000 0.000 1.000 1</ambient>
+            <diffuse>0.000 0.000 1.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_left_39">
+      <static>true</static>
+      <pose>-36.1074 -2.1109 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>0.000 0.000 1.000 1</ambient>
+            <diffuse>0.000 0.000 1.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_left_40">
+      <static>true</static>
+      <pose>-34.5260 -4.5003 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>0.000 0.000 1.000 1</ambient>
+            <diffuse>0.000 0.000 1.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_left_41">
+      <static>true</static>
+      <pose>-32.8502 -6.7203 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>0.000 0.000 1.000 1</ambient>
+            <diffuse>0.000 0.000 1.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_left_42">
+      <static>true</static>
+      <pose>-30.8591 -9.1127 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>0.000 0.000 1.000 1</ambient>
+            <diffuse>0.000 0.000 1.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_left_43">
+      <static>true</static>
+      <pose>-28.9593 -11.2279 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>0.000 0.000 1.000 1</ambient>
+            <diffuse>0.000 0.000 1.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_left_44">
+      <static>true</static>
+      <pose>-26.8886 -13.3962 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>0.000 0.000 1.000 1</ambient>
+            <diffuse>0.000 0.000 1.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_left_45">
+      <static>true</static>
+      <pose>-24.8186 -15.4110 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>0.000 0.000 1.000 1</ambient>
+            <diffuse>0.000 0.000 1.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_left_46">
+      <static>true</static>
+      <pose>-22.6993 -17.2790 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>0.000 0.000 1.000 1</ambient>
+            <diffuse>0.000 0.000 1.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_left_47">
+      <static>true</static>
+      <pose>-20.4038 -19.1408 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>0.000 0.000 1.000 1</ambient>
+            <diffuse>0.000 0.000 1.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_left_48">
+      <static>true</static>
+      <pose>-17.9888 -20.9542 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>0.000 0.000 1.000 1</ambient>
+            <diffuse>0.000 0.000 1.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_left_49">
+      <static>true</static>
+      <pose>-15.7373 -22.5263 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>0.000 0.000 1.000 1</ambient>
+            <diffuse>0.000 0.000 1.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_left_50">
+      <static>true</static>
+      <pose>-13.2516 -24.1340 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>0.000 0.000 1.000 1</ambient>
+            <diffuse>0.000 0.000 1.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_left_51">
+      <static>true</static>
+      <pose>-10.5954 -25.6967 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>0.000 0.000 1.000 1</ambient>
+            <diffuse>0.000 0.000 1.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_left_52">
+      <static>true</static>
+      <pose>-8.0737 -27.0091 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>0.000 0.000 1.000 1</ambient>
+            <diffuse>0.000 0.000 1.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_left_53">
+      <static>true</static>
+      <pose>-5.5931 -28.0880 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>0.000 0.000 1.000 1</ambient>
+            <diffuse>0.000 0.000 1.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_left_54">
+      <static>true</static>
+      <pose>-2.8964 -28.9660 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>0.000 0.000 1.000 1</ambient>
+            <diffuse>0.000 0.000 1.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_left_55">
+      <static>true</static>
+      <pose>-0.2339 -29.4668 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>0.000 0.000 1.000 1</ambient>
+            <diffuse>0.000 0.000 1.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_left_56">
+      <static>true</static>
+      <pose>2.4171 -29.5342 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>0.000 0.000 1.000 1</ambient>
+            <diffuse>0.000 0.000 1.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_left_57">
+      <static>true</static>
+      <pose>5.2156 -29.1929 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>0.000 0.000 1.000 1</ambient>
+            <diffuse>0.000 0.000 1.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_left_58">
+      <static>true</static>
+      <pose>7.8813 -28.6186 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>0.000 0.000 1.000 1</ambient>
+            <diffuse>0.000 0.000 1.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_left_59">
+      <static>true</static>
+      <pose>10.7569 -27.8728 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>0.000 0.000 1.000 1</ambient>
+            <diffuse>0.000 0.000 1.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_left_60">
+      <static>true</static>
+      <pose>13.7361 -27.0085 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>0.000 0.000 1.000 1</ambient>
+            <diffuse>0.000 0.000 1.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_left_61">
+      <static>true</static>
+      <pose>16.5682 -26.1033 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>0.000 0.000 1.000 1</ambient>
+            <diffuse>0.000 0.000 1.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_left_62">
+      <static>true</static>
+      <pose>19.2718 -25.1607 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>0.000 0.000 1.000 1</ambient>
+            <diffuse>0.000 0.000 1.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_left_63">
+      <static>true</static>
+      <pose>21.9955 -24.1208 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>0.000 0.000 1.000 1</ambient>
+            <diffuse>0.000 0.000 1.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_left_64">
+      <static>true</static>
+      <pose>24.6386 -23.0011 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>0.000 0.000 1.000 1</ambient>
+            <diffuse>0.000 0.000 1.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_left_65">
+      <static>true</static>
+      <pose>27.3297 -21.7016 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>0.000 0.000 1.000 1</ambient>
+            <diffuse>0.000 0.000 1.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_left_66">
+      <static>true</static>
+      <pose>29.6553 -20.3656 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>0.000 0.000 1.000 1</ambient>
+            <diffuse>0.000 0.000 1.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_left_67">
+      <static>true</static>
+      <pose>31.8433 -18.7107 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>0.000 0.000 1.000 1</ambient>
+            <diffuse>0.000 0.000 1.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_left_68">
+      <static>true</static>
+      <pose>33.1147 -16.9830 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>0.000 0.000 1.000 1</ambient>
+            <diffuse>0.000 0.000 1.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_left_69">
+      <static>true</static>
+      <pose>33.5032 -14.8630 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>0.000 0.000 1.000 1</ambient>
+            <diffuse>0.000 0.000 1.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_left_70">
+      <static>true</static>
+      <pose>33.1748 -12.4760 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>0.000 0.000 1.000 1</ambient>
+            <diffuse>0.000 0.000 1.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_left_71">
+      <static>true</static>
+      <pose>32.3464 -9.6968 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>0.000 0.000 1.000 1</ambient>
+            <diffuse>0.000 0.000 1.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_left_72">
+      <static>true</static>
+      <pose>31.3447 -6.8319 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>0.000 0.000 1.000 1</ambient>
+            <diffuse>0.000 0.000 1.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_left_73">
+      <static>true</static>
+      <pose>30.3965 -3.7808 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>0.000 0.000 1.000 1</ambient>
+            <diffuse>0.000 0.000 1.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_right_0">
+      <static>true</static>
+      <pose>34.0616 -1.9257 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>1.000 1.000 0.000 1</ambient>
+            <diffuse>1.000 1.000 0.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_right_1">
+      <static>true</static>
+      <pose>33.3808 1.0962 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>1.000 1.000 0.000 1</ambient>
+            <diffuse>1.000 1.000 0.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_right_2">
+      <static>true</static>
+      <pose>32.6624 4.0825 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>1.000 1.000 0.000 1</ambient>
+            <diffuse>1.000 1.000 0.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_right_3">
+      <static>true</static>
+      <pose>31.9079 6.9478 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>1.000 1.000 0.000 1</ambient>
+            <diffuse>1.000 1.000 0.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_right_4">
+      <static>true</static>
+      <pose>30.9930 10.0481 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>1.000 1.000 0.000 1</ambient>
+            <diffuse>1.000 1.000 0.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_right_5">
+      <static>true</static>
+      <pose>30.0241 12.9220 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>1.000 1.000 0.000 1</ambient>
+            <diffuse>1.000 1.000 0.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_right_6">
+      <static>true</static>
+      <pose>28.9274 15.7316 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>1.000 1.000 0.000 1</ambient>
+            <diffuse>1.000 1.000 0.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_right_7">
+      <static>true</static>
+      <pose>27.6205 18.5788 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>1.000 1.000 0.000 1</ambient>
+            <diffuse>1.000 1.000 0.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_right_8">
+      <static>true</static>
+      <pose>26.4487 21.1832 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>1.000 1.000 0.000 1</ambient>
+            <diffuse>1.000 1.000 0.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_right_9">
+      <static>true</static>
+      <pose>25.2287 23.9543 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>1.000 1.000 0.000 1</ambient>
+            <diffuse>1.000 1.000 0.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_right_10">
+      <static>true</static>
+      <pose>23.8751 26.7641 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>1.000 1.000 0.000 1</ambient>
+            <diffuse>1.000 1.000 0.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_right_11">
+      <static>true</static>
+      <pose>22.1610 29.6769 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>1.000 1.000 0.000 1</ambient>
+            <diffuse>1.000 1.000 0.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_right_12">
+      <static>true</static>
+      <pose>20.1888 32.1656 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>1.000 1.000 0.000 1</ambient>
+            <diffuse>1.000 1.000 0.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_right_13">
+      <static>true</static>
+      <pose>17.5331 34.3942 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>1.000 1.000 0.000 1</ambient>
+            <diffuse>1.000 1.000 0.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_right_14">
+      <static>true</static>
+      <pose>14.2288 35.9171 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>1.000 1.000 0.000 1</ambient>
+            <diffuse>1.000 1.000 0.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_right_15">
+      <static>true</static>
+      <pose>11.1271 36.5937 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>1.000 1.000 0.000 1</ambient>
+            <diffuse>1.000 1.000 0.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_right_16">
+      <static>true</static>
+      <pose>7.6815 36.9114 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>1.000 1.000 0.000 1</ambient>
+            <diffuse>1.000 1.000 0.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_right_17">
+      <static>true</static>
+      <pose>4.6227 36.9486 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>1.000 1.000 0.000 1</ambient>
+            <diffuse>1.000 1.000 0.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_right_18">
+      <static>true</static>
+      <pose>1.4683 36.8070 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>1.000 1.000 0.000 1</ambient>
+            <diffuse>1.000 1.000 0.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_right_19">
+      <static>true</static>
+      <pose>-1.3903 36.5452 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>1.000 1.000 0.000 1</ambient>
+            <diffuse>1.000 1.000 0.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_right_20">
+      <static>true</static>
+      <pose>-4.5174 36.1238 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>1.000 1.000 0.000 1</ambient>
+            <diffuse>1.000 1.000 0.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_right_21">
+      <static>true</static>
+      <pose>-7.5175 35.5836 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>1.000 1.000 0.000 1</ambient>
+            <diffuse>1.000 1.000 0.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_right_22">
+      <static>true</static>
+      <pose>-10.5799 34.8732 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>1.000 1.000 0.000 1</ambient>
+            <diffuse>1.000 1.000 0.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_right_23">
+      <static>true</static>
+      <pose>-13.5305 33.9791 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>1.000 1.000 0.000 1</ambient>
+            <diffuse>1.000 1.000 0.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_right_24">
+      <static>true</static>
+      <pose>-16.5747 32.6057 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>1.000 1.000 0.000 1</ambient>
+            <diffuse>1.000 1.000 0.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_right_25">
+      <static>true</static>
+      <pose>-19.3628 30.7313 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>1.000 1.000 0.000 1</ambient>
+            <diffuse>1.000 1.000 0.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_right_26">
+      <static>true</static>
+      <pose>-21.7475 28.5892 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>1.000 1.000 0.000 1</ambient>
+            <diffuse>1.000 1.000 0.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_right_27">
+      <static>true</static>
+      <pose>-23.9770 26.1637 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>1.000 1.000 0.000 1</ambient>
+            <diffuse>1.000 1.000 0.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_right_28">
+      <static>true</static>
+      <pose>-25.8996 23.8834 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>1.000 1.000 0.000 1</ambient>
+            <diffuse>1.000 1.000 0.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_right_29">
+      <static>true</static>
+      <pose>-27.7738 21.7052 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>1.000 1.000 0.000 1</ambient>
+            <diffuse>1.000 1.000 0.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_right_30">
+      <static>true</static>
+      <pose>-29.7071 19.7220 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>1.000 1.000 0.000 1</ambient>
+            <diffuse>1.000 1.000 0.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_right_31">
+      <static>true</static>
+      <pose>-31.9965 17.7622 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>1.000 1.000 0.000 1</ambient>
+            <diffuse>1.000 1.000 0.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_right_32">
+      <static>true</static>
+      <pose>-34.2012 16.0026 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>1.000 1.000 0.000 1</ambient>
+            <diffuse>1.000 1.000 0.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_right_33">
+      <static>true</static>
+      <pose>-36.6123 14.0218 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>1.000 1.000 0.000 1</ambient>
+            <diffuse>1.000 1.000 0.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_right_34">
+      <static>true</static>
+      <pose>-39.0269 11.7415 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>1.000 1.000 0.000 1</ambient>
+            <diffuse>1.000 1.000 0.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_right_35">
+      <static>true</static>
+      <pose>-41.0314 9.1859 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>1.000 1.000 0.000 1</ambient>
+            <diffuse>1.000 1.000 0.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_right_36">
+      <static>true</static>
+      <pose>-42.4256 5.5420 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>1.000 1.000 0.000 1</ambient>
+            <diffuse>1.000 1.000 0.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_right_37">
+      <static>true</static>
+      <pose>-42.1721 1.7665 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>1.000 1.000 0.000 1</ambient>
+            <diffuse>1.000 1.000 0.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_right_38">
+      <static>true</static>
+      <pose>-41.0650 -1.3164 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>1.000 1.000 0.000 1</ambient>
+            <diffuse>1.000 1.000 0.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_right_39">
+      <static>true</static>
+      <pose>-39.5281 -4.1843 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>1.000 1.000 0.000 1</ambient>
+            <diffuse>1.000 1.000 0.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_right_40">
+      <static>true</static>
+      <pose>-37.7826 -6.8229 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>1.000 1.000 0.000 1</ambient>
+            <diffuse>1.000 1.000 0.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_right_41">
+      <static>true</static>
+      <pose>-35.9826 -9.2079 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>1.000 1.000 0.000 1</ambient>
+            <diffuse>1.000 1.000 0.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_right_42">
+      <static>true</static>
+      <pose>-33.8791 -11.7356 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>1.000 1.000 0.000 1</ambient>
+            <diffuse>1.000 1.000 0.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_right_43">
+      <static>true</static>
+      <pose>-31.8929 -13.9471 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>1.000 1.000 0.000 1</ambient>
+            <diffuse>1.000 1.000 0.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_right_44">
+      <static>true</static>
+      <pose>-29.7417 -16.1996 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>1.000 1.000 0.000 1</ambient>
+            <diffuse>1.000 1.000 0.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_right_45">
+      <static>true</static>
+      <pose>-27.5311 -18.3508 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>1.000 1.000 0.000 1</ambient>
+            <diffuse>1.000 1.000 0.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_right_46">
+      <static>true</static>
+      <pose>-25.2801 -20.3351 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>1.000 1.000 0.000 1</ambient>
+            <diffuse>1.000 1.000 0.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_right_47">
+      <static>true</static>
+      <pose>-22.8640 -22.2947 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>1.000 1.000 0.000 1</ambient>
+            <diffuse>1.000 1.000 0.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_right_48">
+      <static>true</static>
+      <pose>-20.3324 -24.1958 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>1.000 1.000 0.000 1</ambient>
+            <diffuse>1.000 1.000 0.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_right_49">
+      <static>true</static>
+      <pose>-17.9724 -25.8435 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>1.000 1.000 0.000 1</ambient>
+            <diffuse>1.000 1.000 0.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_right_50">
+      <static>true</static>
+      <pose>-15.3579 -27.5345 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>1.000 1.000 0.000 1</ambient>
+            <diffuse>1.000 1.000 0.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_right_51">
+      <static>true</static>
+      <pose>-12.5384 -29.1931 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>1.000 1.000 0.000 1</ambient>
+            <diffuse>1.000 1.000 0.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_right_52">
+      <static>true</static>
+      <pose>-9.8104 -30.6123 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>1.000 1.000 0.000 1</ambient>
+            <diffuse>1.000 1.000 0.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_right_53">
+      <static>true</static>
+      <pose>-7.0190 -31.8252 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>1.000 1.000 0.000 1</ambient>
+            <diffuse>1.000 1.000 0.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_right_54">
+      <static>true</static>
+      <pose>-3.9143 -32.8343 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>1.000 1.000 0.000 1</ambient>
+            <diffuse>1.000 1.000 0.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_right_55">
+      <static>true</static>
+      <pose>-0.6635 -33.4437 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>1.000 1.000 0.000 1</ambient>
+            <diffuse>1.000 1.000 0.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_right_56">
+      <static>true</static>
+      <pose>2.6324 -33.5284 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>1.000 1.000 0.000 1</ambient>
+            <diffuse>1.000 1.000 0.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_right_57">
+      <static>true</static>
+      <pose>5.9225 -33.1299 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>1.000 1.000 0.000 1</ambient>
+            <diffuse>1.000 1.000 0.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_right_58">
+      <static>true</static>
+      <pose>8.8264 -32.5053 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>1.000 1.000 0.000 1</ambient>
+            <diffuse>1.000 1.000 0.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_right_59">
+      <static>true</static>
+      <pose>11.8131 -31.7309 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>1.000 1.000 0.000 1</ambient>
+            <diffuse>1.000 1.000 0.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_right_60">
+      <static>true</static>
+      <pose>14.9048 -30.8340 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>1.000 1.000 0.000 1</ambient>
+            <diffuse>1.000 1.000 0.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_right_61">
+      <static>true</static>
+      <pose>17.8353 -29.8973 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>1.000 1.000 0.000 1</ambient>
+            <diffuse>1.000 1.000 0.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_right_62">
+      <static>true</static>
+      <pose>20.6402 -28.9193 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>1.000 1.000 0.000 1</ambient>
+            <diffuse>1.000 1.000 0.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_right_63">
+      <static>true</static>
+      <pose>23.4843 -27.8334 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>1.000 1.000 0.000 1</ambient>
+            <diffuse>1.000 1.000 0.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_right_64">
+      <static>true</static>
+      <pose>26.2769 -26.6503 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>1.000 1.000 0.000 1</ambient>
+            <diffuse>1.000 1.000 0.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_right_65">
+      <static>true</static>
+      <pose>29.1838 -25.2459 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>1.000 1.000 0.000 1</ambient>
+            <diffuse>1.000 1.000 0.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_right_66">
+      <static>true</static>
+      <pose>31.8101 -23.7355 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>1.000 1.000 0.000 1</ambient>
+            <diffuse>1.000 1.000 0.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_right_67">
+      <static>true</static>
+      <pose>34.5875 -21.6209 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>1.000 1.000 0.000 1</ambient>
+            <diffuse>1.000 1.000 0.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_right_68">
+      <static>true</static>
+      <pose>36.7855 -18.5722 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>1.000 1.000 0.000 1</ambient>
+            <diffuse>1.000 1.000 0.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_right_69">
+      <static>true</static>
+      <pose>37.5030 -14.8247 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>1.000 1.000 0.000 1</ambient>
+            <diffuse>1.000 1.000 0.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_right_70">
+      <static>true</static>
+      <pose>37.0682 -11.5590 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>1.000 1.000 0.000 1</ambient>
+            <diffuse>1.000 1.000 0.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_right_71">
+      <static>true</static>
+      <pose>36.1334 -8.4086 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>1.000 1.000 0.000 1</ambient>
+            <diffuse>1.000 1.000 0.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_right_72">
+      <static>true</static>
+      <pose>35.1266 -5.5289 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>1.000 1.000 0.000 1</ambient>
+            <diffuse>1.000 1.000 0.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="cone_right_73">
+      <static>true</static>
+      <pose>34.2645 -2.7616 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>0.5</length></cylinder></geometry>
+          <material>
+            <ambient>1.000 1.000 0.000 1</ambient>
+            <diffuse>1.000 1.000 0.000 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+  </world>
+</sdf>

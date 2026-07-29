@@ -112,8 +112,10 @@ def _spawn_robot(context):
     # --- Render controllers yaml ---
     cfg_dir = os.path.join(gz_share, 'bringup', 'config')
     env = Environment(loader=FileSystemLoader(cfg_dir), keep_trailing_newline=True)
+    use_localization = context.launch_configurations.get('use_localization', 'false')
+    enable_odom_tf = (use_localization.lower() != 'true')
     rendered_ctrl = env.get_template('controllers_simulation.yaml.j2').render(
-        namespace=namespace, prefix=prefix, **robot_params
+        namespace=namespace, prefix=prefix, enable_odom_tf=enable_odom_tf, **robot_params
     )
     tmp_ctrl = tempfile.NamedTemporaryFile(mode='w', suffix='.yaml', prefix='ctrl_ns_', delete=False)
     tmp_ctrl.write(rendered_ctrl)

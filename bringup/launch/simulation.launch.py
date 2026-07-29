@@ -22,6 +22,8 @@ def generate_launch_description():
         DeclareLaunchArgument('y',   default_value='0.0'),
         DeclareLaunchArgument('z',   default_value='0.0'),
         DeclareLaunchArgument('yaw', default_value='0.0'),
+        DeclareLaunchArgument('use_localization', default_value='false',
+                              description='EKF active — disables controller odom TF to avoid double-publishing'),
 
         # Launch Gazebo with the world
         IncludeLaunchDescription(
@@ -46,13 +48,14 @@ def generate_launch_description():
                 ])
             ]),
             launch_arguments={
-                'robot_name': LaunchConfiguration('robot_name'),
-                'namespace':  LaunchConfiguration('namespace'),
-                'prefix':     LaunchConfiguration('prefix'),
-                'x':   LaunchConfiguration('x'),
-                'y':   LaunchConfiguration('y'),
-                'z':   LaunchConfiguration('z'),
-                'yaw': LaunchConfiguration('yaw'),
+                'robot_name':       LaunchConfiguration('robot_name'),
+                'namespace':        LaunchConfiguration('namespace'),
+                'prefix':           LaunchConfiguration('prefix'),
+                'x':                LaunchConfiguration('x'),
+                'y':                LaunchConfiguration('y'),
+                'z':                LaunchConfiguration('z'),
+                'yaw':              LaunchConfiguration('yaw'),
+                'use_localization': LaunchConfiguration('use_localization'),
             }.items()
         ),
     ])

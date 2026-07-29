@@ -25,7 +25,7 @@
     velocity_rolling_window_size: 10
     base_frame_id: {{ prefix }}base_footprint
     odom_frame_id: {{ prefix }}odom
-    enable_odom_tf: true
+    enable_odom_tf: {{ 'true' if enable_odom_tf else 'false' }}
     # [x/vx, y/vy, z/vz, roll/wx, pitch/wy, yaw/wz]
     # Non-zero covariances tell slam_toolbox/EKF the odometry has noise.
     # Zero would mean "perfect odometry" — causes violent map corrections.
