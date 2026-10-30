@@ -24,6 +24,8 @@ def generate_launch_description():
         DeclareLaunchArgument('yaw', default_value='0.0'),
         DeclareLaunchArgument('use_localization', default_value='false',
                               description='EKF active — disables controller odom TF to avoid double-publishing'),
+        DeclareLaunchArgument('use_rviz', default_value='true',
+                              description='false to skip launching RViz'),
 
         # Launch Gazebo with the world
         IncludeLaunchDescription(
@@ -56,6 +58,7 @@ def generate_launch_description():
                 'z':                LaunchConfiguration('z'),
                 'yaw':              LaunchConfiguration('yaw'),
                 'use_localization': LaunchConfiguration('use_localization'),
+                'use_rviz':         LaunchConfiguration('use_rviz'),
             }.items()
         ),
     ])

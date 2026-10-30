@@ -29,6 +29,8 @@ def generate_launch_description():
                               description='Spawn Z above ground (m)'),
         DeclareLaunchArgument('yaw', default_value='0.0',
                               description='Spawn yaw angle (rad)'),
+        DeclareLaunchArgument('use_rviz', default_value='true',
+                              description='false to skip launching RViz'),
         OpaqueFunction(function=_spawn_robot),
     ])
 
@@ -73,6 +75,17 @@ def _render_sensor_fragments(robot_params, prefix, gazebo=False, namespace=''):
                     use_gpu=True,
                     noise_enabled=no['enabled'], noise_mean=no['mean'], noise_stddev=no['stddev'],
                 )
+            elif sensor_type == 'lidar_3d':
+                si, no = sp['simulation'], sp['simulation']['noise']
+                render_kwargs.update(
+                    namespace=namespace,
+                    channels=si['channels'], horizontal_samples=si['horizontal_samples'],
+                    horizontal_fov=si['horizontal_fov'],
+                    vertical_min=si['vertical_min'], vertical_max=si['vertical_max'],
+                    range_min=si['range_min'], range_max=si['range_max'],
+                    frequency=si['frequency'],
+                    noise_enabled=no['enabled'], noise_mean=no['mean'], noise_stddev=no['stddev'],
+                )
             elif sensor_type == 'imu':
                 si, no = sp['simulation'], sp['simulation']['noise']
                 render_kwargs.update(
@@ -114,6 +127,7 @@ def _spawn_robot(context):
     env = Environment(loader=FileSystemLoader(cfg_dir), keep_trailing_newline=True)
     use_localization = context.launch_configurations.get('use_localization', 'false')
     enable_odom_tf = (use_localization.lower() != 'true')
+    use_rviz = context.launch_configurations.get('use_rviz', 'true').lower() == 'true'
     rendered_ctrl = env.get_template('controllers_simulation.yaml.j2').render(
         namespace=namespace, prefix=prefix, enable_odom_tf=enable_odom_tf, **robot_params
     )
@@ -249,10 +263,13 @@ def _spawn_robot(context):
         arguments=['bicycle_steering_controller', '--param-file', ns_controllers_yaml],
     )
 
-    return [
+    actions = [
         node_robot_state_publisher,
         node_robot_description_publisher_rviz,
-        node_rviz2,
+    ]
+    if use_rviz:
+        actions.append(node_rviz2)
+    actions += [
         gz_spawn_entity,
         RegisterEventHandler(OnProcessExit(
             target_action=gz_spawn_entity,
@@ -271,3 +288,4 @@ def _spawn_robot(context):
             on_exit=[bicycle_steering_controller_spawner],
         )),
     ]
+    return actions

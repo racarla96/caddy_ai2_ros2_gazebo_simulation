@@ -41,8 +41,14 @@ def generate_launch_description():
             os.path.dirname(os.path.dirname(pkg_share)), 'share'
         )
         existing = os.environ.get('GZ_SIM_RESOURCE_PATH', '')
-        parts = [p for p in [extra_resource_path, pkg_prefix_share, existing] if p]
+        # description/models holds worlds' own models (e.g. parking_garage, used via model://)
+        models_dir = os.path.join(pkg_share, 'description', 'models')
+        parts = [p for p in [extra_resource_path, models_dir, pkg_prefix_share, existing] if p]
         resource_path = os.pathsep.join(parts)
+
+        # e.g. GZ_SIM_EXTRA_ARGS="-s --headless-rendering" for a server-only run without display
+        extra_gz_args = context.environment.get('GZ_SIM_EXTRA_ARGS', '')
+        gz_args = ' '.join(a for a in ['-r', extra_gz_args, world_sdf] if a)
 
         gz_sim = IncludeLaunchDescription(
             PythonLaunchDescriptionSource([
@@ -50,7 +56,7 @@ def generate_launch_description():
                     FindPackageShare('ros_gz_sim'), 'launch', 'gz_sim.launch.py'
                 ])
             ]),
-            launch_arguments={'gz_args': f'-r {world_sdf}'}.items()
+            launch_arguments={'gz_args': gz_args}.items()
         )
 
         clock_bridge = Node(
