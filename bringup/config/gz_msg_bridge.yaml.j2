@@ -53,3 +53,34 @@
   gz_type_name: "gz.msgs.PointCloudPacked"
   direction: "GZ_TO_ROS"
   frame_id: "{{ prefix }}{{ sensors['lidar_3d_rs_helios_5515']['frame_id'] }}"
+
+{#- ZED 2i cameras: one set of bridges per enabled camera_rgbd sensor. -#}
+{% for name, cfg in sensors.items() if cfg.type == 'camera_rgbd' and cfg.get('enabled', true) %}
+- ros_topic_name: "{{ ns_prefix }}{{ name }}/zed_node/left/color/rect/image"
+  gz_topic_name: "{{ ns_prefix }}{{ name }}/rgbd/image"
+  ros_type_name: "sensor_msgs/msg/Image"
+  gz_type_name: "gz.msgs.Image"
+  direction: "GZ_TO_ROS"
+  frame_id: "{{ prefix }}{{ cfg.frame_id }}_optical"
+
+- ros_topic_name: "{{ ns_prefix }}{{ name }}/zed_node/left/color/rect/camera_info"
+  gz_topic_name: "{{ ns_prefix }}{{ name }}/rgbd/camera_info"
+  ros_type_name: "sensor_msgs/msg/CameraInfo"
+  gz_type_name: "gz.msgs.CameraInfo"
+  direction: "GZ_TO_ROS"
+  frame_id: "{{ prefix }}{{ cfg.frame_id }}_optical"
+
+- ros_topic_name: "{{ ns_prefix }}{{ name }}/zed_node/depth/depth_registered"
+  gz_topic_name: "{{ ns_prefix }}{{ name }}/rgbd/depth_image"
+  ros_type_name: "sensor_msgs/msg/Image"
+  gz_type_name: "gz.msgs.Image"
+  direction: "GZ_TO_ROS"
+  frame_id: "{{ prefix }}{{ cfg.frame_id }}_optical"
+
+- ros_topic_name: "{{ ns_prefix }}{{ name }}/zed_node/point_cloud/cloud_registered"
+  gz_topic_name: "{{ ns_prefix }}{{ name }}/rgbd/points"
+  ros_type_name: "sensor_msgs/msg/PointCloud2"
+  gz_type_name: "gz.msgs.PointCloudPacked"
+  direction: "GZ_TO_ROS"
+  frame_id: "{{ prefix }}{{ cfg.frame_id }}_optical"
+{% endfor %}

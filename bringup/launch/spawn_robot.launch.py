@@ -86,6 +86,15 @@ def _render_sensor_fragments(robot_params, prefix, gazebo=False, namespace=''):
                     frequency=si['frequency'],
                     noise_enabled=no['enabled'], noise_mean=no['mean'], noise_stddev=no['stddev'],
                 )
+            elif sensor_type == 'camera_rgbd':
+                si = sp['simulation']
+                render_kwargs.update(
+                    namespace=namespace,
+                    horizontal_fov=si['horizontal_fov'],
+                    image_width=si['image_width'], image_height=si['image_height'],
+                    range_min=si['range_min'], range_max=si['range_max'],
+                    update_rate=si['update_rate'],
+                )
             elif sensor_type == 'imu':
                 si, no = sp['simulation'], sp['simulation']['noise']
                 render_kwargs.update(
