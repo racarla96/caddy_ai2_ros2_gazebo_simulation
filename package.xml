@@ -21,6 +21,7 @@
   <exec_depend>caddy_ai2_ros2_sensors_lidar_sick_lms_291</exec_depend>
   <exec_depend>caddy_ai2_ros2_control_sensors_sbg_ig_500n</exec_depend>
   <exec_depend>caddy_ai2_ros2_imu_vectornav_vn100</exec_depend>
+  <exec_depend>caddy_ai2_ros2_camera_zed_2i</exec_depend>
   <exec_depend>caddy_ai2_ros2_robot_description_publisher</exec_depend>
 
   <test_depend>ament_lint_auto</test_depend>
