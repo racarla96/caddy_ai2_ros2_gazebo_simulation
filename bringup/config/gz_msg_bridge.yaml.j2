@@ -53,3 +53,26 @@
   gz_type_name: "gz.msgs.PointCloudPacked"
   direction: "GZ_TO_ROS"
   frame_id: "{{ prefix }}{{ sensors['lidar_3d_rs_helios_5515']['frame_id'] }}"
+
+{% if 'imu_vn100' in sensors and sensors['imu_vn100'].get('enabled', True) %}
+- ros_topic_name: "{{ ns_prefix }}vectornav/imu"
+  gz_topic_name: "{{ ns_prefix }}vectornav/imu"
+  ros_type_name: "sensor_msgs/msg/Imu"
+  gz_type_name: "gz.msgs.IMU"
+  direction: "GZ_TO_ROS"
+  frame_id: "{{ prefix }}{{ sensors['imu_vn100']['frame_id'] }}"
+
+- ros_topic_name: "{{ ns_prefix }}vectornav/magnetic"
+  gz_topic_name: "{{ ns_prefix }}vectornav/magnetic"
+  ros_type_name: "sensor_msgs/msg/MagneticField"
+  gz_type_name: "gz.msgs.Magnetometer"
+  direction: "GZ_TO_ROS"
+  frame_id: "{{ prefix }}{{ sensors['imu_vn100']['frame_id'] }}"
+
+- ros_topic_name: "{{ ns_prefix }}vectornav/pressure"
+  gz_topic_name: "{{ ns_prefix }}vectornav/pressure"
+  ros_type_name: "sensor_msgs/msg/FluidPressure"
+  gz_type_name: "gz.msgs.FluidPressure"
+  direction: "GZ_TO_ROS"
+  frame_id: "{{ prefix }}{{ sensors['imu_vn100']['frame_id'] }}"
+{% endif %}

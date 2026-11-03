@@ -32,6 +32,14 @@
           filename="gz-sim-imu-system"
           name="gz::sim::systems::Imu">
         </plugin>
+        <plugin
+          filename="gz-sim-magnetometer-system"
+          name="gz::sim::systems::Magnetometer">
+        </plugin>
+        <plugin
+          filename="gz-sim-air-pressure-system"
+          name="gz::sim::systems::AirPressure">
+        </plugin>
 
         <!-- GPS plugin -->
         <plugin
