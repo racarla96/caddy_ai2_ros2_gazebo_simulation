@@ -1,0 +1,38 @@
+<?xml version="1.0" ?>
+<sdf version="1.6">
+  <!-- Generado por caddy_ai2_ros2_mvsim_simulation/tools/export_circuit_to_gazebo.py a partir de demo_road_circuit1 de
+       MVSim (MRPT/mvsim, BSD-3). No editar a mano. -->
+  <model name="road_circuit">
+    <static>true</static>
+    <link name="link">
+      <visual name="terrain">
+        <geometry><mesh><uri>model://road_circuit/meshes/terrain.stl</uri></mesh></geometry>
+        <material><ambient>0.42 0.36 0.29 1</ambient><diffuse>0.50 0.43 0.34 1</diffuse><specular>0.02 0.02 0.02 1</specular></material>
+      </visual>
+      <collision name="terrain">
+        <geometry><mesh><uri>model://road_circuit/meshes/terrain.stl</uri></mesh></geometry>
+        <surface><friction><ode><mu>1.0</mu><mu2>1.0</mu2></ode></friction></surface>
+      </collision>
+      <visual name="roads">
+        <geometry><mesh><uri>model://road_circuit/meshes/roads.stl</uri></mesh></geometry>
+        <material><ambient>0.13 0.13 0.14 1</ambient><diffuse>0.18 0.18 0.19 1</diffuse><specular>0.02 0.02 0.02 1</specular></material>
+      </visual>
+      <visual name="deck0"><pose>4.0 36.0 3.8699999999999997 0 0 0</pose><geometry><box><size>4.0 20.0 0.3</size></box></geometry>
+        <material><ambient>0.62 0.60 0.56 1</ambient><diffuse>0.62 0.60 0.56 1</diffuse></material></visual>
+      <collision name="deck0"><pose>4.0 36.0 3.8699999999999997 0 0 0</pose><geometry><box><size>4.0 20.0 0.3</size></box></geometry>
+        <surface><friction><ode><mu>1.0</mu><mu2>1.0</mu2></ode></friction></surface></collision>
+      <visual name="column0"><pose>2.1 41.0 2.0 0 0 0</pose><geometry><cylinder><radius>0.1</radius><length>4.0</length></cylinder></geometry>
+        <material><ambient>0.38 0.38 0.38 1</ambient><diffuse>0.38 0.38 0.38 1</diffuse></material></visual>
+      <collision name="column0"><pose>2.1 41.0 2.0 0 0 0</pose><geometry><cylinder><radius>0.1</radius><length>4.0</length></cylinder></geometry></collision>
+      <visual name="column1"><pose>2.1 32.0 2.0 0 0 0</pose><geometry><cylinder><radius>0.1</radius><length>4.0</length></cylinder></geometry>
+        <material><ambient>0.38 0.38 0.38 1</ambient><diffuse>0.38 0.38 0.38 1</diffuse></material></visual>
+      <collision name="column1"><pose>2.1 32.0 2.0 0 0 0</pose><geometry><cylinder><radius>0.1</radius><length>4.0</length></cylinder></geometry></collision>
+      <visual name="column2"><pose>5.9 41.0 2.0 0 0 0</pose><geometry><cylinder><radius>0.1</radius><length>4.0</length></cylinder></geometry>
+        <material><ambient>0.38 0.38 0.38 1</ambient><diffuse>0.38 0.38 0.38 1</diffuse></material></visual>
+      <collision name="column2"><pose>5.9 41.0 2.0 0 0 0</pose><geometry><cylinder><radius>0.1</radius><length>4.0</length></cylinder></geometry></collision>
+      <visual name="column3"><pose>5.9 32.0 2.0 0 0 0</pose><geometry><cylinder><radius>0.1</radius><length>4.0</length></cylinder></geometry>
+        <material><ambient>0.38 0.38 0.38 1</ambient><diffuse>0.38 0.38 0.38 1</diffuse></material></visual>
+      <collision name="column3"><pose>5.9 32.0 2.0 0 0 0</pose><geometry><cylinder><radius>0.1</radius><length>4.0</length></cylinder></geometry></collision>
+    </link>
+  </model>
+</sdf>
